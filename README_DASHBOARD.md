@@ -1,6 +1,6 @@
 # Hệ thống Quản lý Hoạt động Giảng viên - Dashboard
 
-## TỔNG QUAN ----
+## TỔNG QUAN 3 ----
 
 Hệ thống quản lý hoạt động giảng viên với phân quyền 5 cấp độ:
 - **SuperAdmin**: Quản lý toàn bộ hệ thống
