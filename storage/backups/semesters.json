@@ -1,0 +1,986 @@
+[
+    {
+        "id": 3,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 4,
+        "created_at": "1976-09-01",
+        "updated_at": "1976-09-01"
+    },
+    {
+        "id": 4,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 5,
+        "created_at": "1977-09-01",
+        "updated_at": "1977-09-01"
+    },
+    {
+        "id": 5,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 6,
+        "created_at": "1978-09-01",
+        "updated_at": "1978-09-01"
+    },
+    {
+        "id": 6,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 7,
+        "created_at": "1979-09-01",
+        "updated_at": "1979-09-01"
+    },
+    {
+        "id": 7,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 8,
+        "created_at": "1980-09-01",
+        "updated_at": "1980-09-01"
+    },
+    {
+        "id": 8,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 9,
+        "created_at": "1981-09-01",
+        "updated_at": "1981-09-01"
+    },
+    {
+        "id": 9,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 10,
+        "created_at": "1982-09-01",
+        "updated_at": "1982-09-01"
+    },
+    {
+        "id": 10,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 11,
+        "created_at": "1983-09-01",
+        "updated_at": "1983-09-01"
+    },
+    {
+        "id": 11,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 12,
+        "created_at": "1984-09-01",
+        "updated_at": "1984-09-01"
+    },
+    {
+        "id": 12,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 13,
+        "created_at": "1985-09-01",
+        "updated_at": "1985-09-01"
+    },
+    {
+        "id": 13,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 14,
+        "created_at": "1986-09-01",
+        "updated_at": "1986-09-01"
+    },
+    {
+        "id": 14,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 15,
+        "created_at": "1987-09-01",
+        "updated_at": "1987-09-01"
+    },
+    {
+        "id": 15,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 16,
+        "created_at": "1988-09-01",
+        "updated_at": "1988-09-01"
+    },
+    {
+        "id": 16,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 17,
+        "created_at": "1989-09-01",
+        "updated_at": "1989-09-01"
+    },
+    {
+        "id": 17,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 18,
+        "created_at": "1990-09-01",
+        "updated_at": "1990-09-01"
+    },
+    {
+        "id": 18,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 19,
+        "created_at": "1991-09-01",
+        "updated_at": "1991-09-01"
+    },
+    {
+        "id": 19,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 20,
+        "created_at": "1992-09-01",
+        "updated_at": "1992-09-01"
+    },
+    {
+        "id": 20,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 21,
+        "created_at": "1993-09-01",
+        "updated_at": "1993-09-01"
+    },
+    {
+        "id": 21,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 22,
+        "created_at": "1994-09-01",
+        "updated_at": "1994-09-01"
+    },
+    {
+        "id": 22,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 23,
+        "created_at": "1995-09-01",
+        "updated_at": "1995-09-01"
+    },
+    {
+        "id": 23,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 24,
+        "created_at": "1996-09-01",
+        "updated_at": "1996-09-01"
+    },
+    {
+        "id": 24,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 25,
+        "created_at": "1997-09-01",
+        "updated_at": "1997-09-01"
+    },
+    {
+        "id": 25,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 26,
+        "created_at": "1998-09-01",
+        "updated_at": "1998-09-01"
+    },
+    {
+        "id": 26,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 27,
+        "created_at": "1999-09-01",
+        "updated_at": "1999-09-01"
+    },
+    {
+        "id": 34,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 4,
+        "created_at": "1976-09-01",
+        "updated_at": "1976-09-01"
+    },
+    {
+        "id": 35,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 5,
+        "created_at": "1977-09-01",
+        "updated_at": "1977-09-01"
+    },
+    {
+        "id": 36,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 6,
+        "created_at": "1978-09-01",
+        "updated_at": "1978-09-01"
+    },
+    {
+        "id": 37,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 7,
+        "created_at": "1979-09-01",
+        "updated_at": "1979-09-01"
+    },
+    {
+        "id": 38,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 8,
+        "created_at": "1980-09-01",
+        "updated_at": "1980-09-01"
+    },
+    {
+        "id": 39,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 9,
+        "created_at": "1981-09-01",
+        "updated_at": "1981-09-01"
+    },
+    {
+        "id": 40,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 10,
+        "created_at": "1982-09-01",
+        "updated_at": "1982-09-01"
+    },
+    {
+        "id": 41,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 11,
+        "created_at": "1983-09-01",
+        "updated_at": "1983-09-01"
+    },
+    {
+        "id": 42,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 12,
+        "created_at": "1984-09-01",
+        "updated_at": "1984-09-01"
+    },
+    {
+        "id": 43,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 13,
+        "created_at": "1985-09-01",
+        "updated_at": "1985-09-01"
+    },
+    {
+        "id": 44,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 14,
+        "created_at": "1986-09-01",
+        "updated_at": "1986-09-01"
+    },
+    {
+        "id": 45,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 15,
+        "created_at": "1987-09-01",
+        "updated_at": "1987-09-01"
+    },
+    {
+        "id": 46,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 16,
+        "created_at": "1988-09-01",
+        "updated_at": "1988-09-01"
+    },
+    {
+        "id": 47,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 17,
+        "created_at": "1989-09-01",
+        "updated_at": "1989-09-01"
+    },
+    {
+        "id": 48,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 18,
+        "created_at": "1990-09-01",
+        "updated_at": "1990-09-01"
+    },
+    {
+        "id": 49,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 19,
+        "created_at": "1991-09-01",
+        "updated_at": "1991-09-01"
+    },
+    {
+        "id": 50,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 20,
+        "created_at": "1992-09-01",
+        "updated_at": "1992-09-01"
+    },
+    {
+        "id": 51,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 21,
+        "created_at": "1993-09-01",
+        "updated_at": "1993-09-01"
+    },
+    {
+        "id": 52,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 22,
+        "created_at": "1994-09-01",
+        "updated_at": "1994-09-01"
+    },
+    {
+        "id": 53,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 23,
+        "created_at": "1995-09-01",
+        "updated_at": "1995-09-01"
+    },
+    {
+        "id": 54,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 24,
+        "created_at": "1996-09-01",
+        "updated_at": "1996-09-01"
+    },
+    {
+        "id": 55,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 25,
+        "created_at": "1997-09-01",
+        "updated_at": "1997-09-01"
+    },
+    {
+        "id": 56,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 26,
+        "created_at": "1998-09-01",
+        "updated_at": "1998-09-01"
+    },
+    {
+        "id": 57,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 27,
+        "created_at": "1999-09-01",
+        "updated_at": "1999-09-01"
+    },
+    {
+        "id": 65,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 28,
+        "created_at": "2000-09-01",
+        "updated_at": "2000-09-01"
+    },
+    {
+        "id": 66,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 29,
+        "created_at": "2001-09-01",
+        "updated_at": "2001-09-01"
+    },
+    {
+        "id": 67,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 30,
+        "created_at": "2002-09-01",
+        "updated_at": "2002-09-01"
+    },
+    {
+        "id": 68,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 31,
+        "created_at": "2003-09-01",
+        "updated_at": "2003-09-01"
+    },
+    {
+        "id": 69,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 32,
+        "created_at": "2004-09-01",
+        "updated_at": "2004-09-01"
+    },
+    {
+        "id": 70,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 33,
+        "created_at": "2005-09-01",
+        "updated_at": "2005-09-01"
+    },
+    {
+        "id": 71,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 34,
+        "created_at": "2006-09-01",
+        "updated_at": "2006-09-01"
+    },
+    {
+        "id": 72,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 35,
+        "created_at": "2007-09-01",
+        "updated_at": "2007-09-01"
+    },
+    {
+        "id": 73,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 36,
+        "created_at": "2008-09-01",
+        "updated_at": "2008-09-01"
+    },
+    {
+        "id": 74,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 37,
+        "created_at": "2009-09-01",
+        "updated_at": "2009-09-01"
+    },
+    {
+        "id": 75,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 38,
+        "created_at": "2010-09-01",
+        "updated_at": "2010-09-01"
+    },
+    {
+        "id": 76,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 39,
+        "created_at": "2011-09-01",
+        "updated_at": "2011-09-01"
+    },
+    {
+        "id": 77,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 40,
+        "created_at": "2012-09-01",
+        "updated_at": "2012-09-01"
+    },
+    {
+        "id": 78,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 41,
+        "created_at": "2013-09-01",
+        "updated_at": "2013-09-01"
+    },
+    {
+        "id": 79,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 42,
+        "created_at": "2014-09-01",
+        "updated_at": "2014-09-01"
+    },
+    {
+        "id": 80,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 43,
+        "created_at": "2015-09-01",
+        "updated_at": "2015-09-01"
+    },
+    {
+        "id": 81,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 44,
+        "created_at": "2016-09-01",
+        "updated_at": "2016-09-01"
+    },
+    {
+        "id": 82,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 45,
+        "created_at": "2017-09-01",
+        "updated_at": "2017-09-01"
+    },
+    {
+        "id": 83,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 46,
+        "created_at": "2018-09-01",
+        "updated_at": "2018-09-01"
+    },
+    {
+        "id": 84,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 47,
+        "created_at": "2019-09-01",
+        "updated_at": "2019-09-01"
+    },
+    {
+        "id": 85,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 48,
+        "created_at": "2020-09-01",
+        "updated_at": "2020-09-01"
+    },
+    {
+        "id": 86,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 49,
+        "created_at": "2021-09-01",
+        "updated_at": "2021-09-01"
+    },
+    {
+        "id": 87,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 50,
+        "created_at": "2022-09-01",
+        "updated_at": "2022-09-01"
+    },
+    {
+        "id": 88,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 51,
+        "created_at": "2023-09-01",
+        "updated_at": "2023-09-01"
+    },
+    {
+        "id": 89,
+        "semester_name": "Học kỳ I",
+        "order_number": 1,
+        "academic_year_id": 52,
+        "created_at": "2024-09-01",
+        "updated_at": "2024-09-01"
+    },
+    {
+        "id": 96,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 28,
+        "created_at": "2000-09-01",
+        "updated_at": "2000-09-01"
+    },
+    {
+        "id": 97,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 29,
+        "created_at": "2001-09-01",
+        "updated_at": "2001-09-01"
+    },
+    {
+        "id": 98,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 30,
+        "created_at": "2002-09-01",
+        "updated_at": "2002-09-01"
+    },
+    {
+        "id": 99,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 31,
+        "created_at": "2003-09-01",
+        "updated_at": "2003-09-01"
+    },
+    {
+        "id": 100,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 32,
+        "created_at": "2004-09-01",
+        "updated_at": "2004-09-01"
+    },
+    {
+        "id": 101,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 33,
+        "created_at": "2005-09-01",
+        "updated_at": "2005-09-01"
+    },
+    {
+        "id": 102,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 34,
+        "created_at": "2006-09-01",
+        "updated_at": "2006-09-01"
+    },
+    {
+        "id": 103,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 35,
+        "created_at": "2007-09-01",
+        "updated_at": "2007-09-01"
+    },
+    {
+        "id": 104,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 36,
+        "created_at": "2008-09-01",
+        "updated_at": "2008-09-01"
+    },
+    {
+        "id": 105,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 37,
+        "created_at": "2009-09-01",
+        "updated_at": "2009-09-01"
+    },
+    {
+        "id": 106,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 38,
+        "created_at": "2010-09-01",
+        "updated_at": "2010-09-01"
+    },
+    {
+        "id": 107,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 39,
+        "created_at": "2011-09-01",
+        "updated_at": "2011-09-01"
+    },
+    {
+        "id": 108,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 40,
+        "created_at": "2012-09-01",
+        "updated_at": "2012-09-01"
+    },
+    {
+        "id": 109,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 41,
+        "created_at": "2013-09-01",
+        "updated_at": "2013-09-01"
+    },
+    {
+        "id": 110,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 42,
+        "created_at": "2014-09-01",
+        "updated_at": "2014-09-01"
+    },
+    {
+        "id": 111,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 43,
+        "created_at": "2015-09-01",
+        "updated_at": "2015-09-01"
+    },
+    {
+        "id": 112,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 44,
+        "created_at": "2016-09-01",
+        "updated_at": "2016-09-01"
+    },
+    {
+        "id": 113,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 45,
+        "created_at": "2017-09-01",
+        "updated_at": "2017-09-01"
+    },
+    {
+        "id": 114,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 46,
+        "created_at": "2018-09-01",
+        "updated_at": "2018-09-01"
+    },
+    {
+        "id": 115,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 47,
+        "created_at": "2019-09-01",
+        "updated_at": "2019-09-01"
+    },
+    {
+        "id": 116,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 48,
+        "created_at": "2020-09-01",
+        "updated_at": "2020-09-01"
+    },
+    {
+        "id": 117,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 49,
+        "created_at": "2021-09-01",
+        "updated_at": "2021-09-01"
+    },
+    {
+        "id": 118,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 50,
+        "created_at": "2022-09-01",
+        "updated_at": "2022-09-01"
+    },
+    {
+        "id": 119,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 51,
+        "created_at": "2023-09-01",
+        "updated_at": "2023-09-01"
+    },
+    {
+        "id": 120,
+        "semester_name": "Học kỳ II",
+        "order_number": 2,
+        "academic_year_id": 52,
+        "created_at": "2024-09-01",
+        "updated_at": "2024-09-01"
+    },
+    {
+        "id": 127,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 28,
+        "created_at": "2000-09-01",
+        "updated_at": "2000-09-01"
+    },
+    {
+        "id": 128,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 29,
+        "created_at": "2001-09-01",
+        "updated_at": "2001-09-01"
+    },
+    {
+        "id": 129,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 30,
+        "created_at": "2002-09-01",
+        "updated_at": "2002-09-01"
+    },
+    {
+        "id": 130,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 31,
+        "created_at": "2003-09-01",
+        "updated_at": "2003-09-01"
+    },
+    {
+        "id": 131,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 32,
+        "created_at": "2004-09-01",
+        "updated_at": "2004-09-01"
+    },
+    {
+        "id": 132,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 33,
+        "created_at": "2005-09-01",
+        "updated_at": "2005-09-01"
+    },
+    {
+        "id": 133,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 34,
+        "created_at": "2006-09-01",
+        "updated_at": "2006-09-01"
+    },
+    {
+        "id": 134,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 35,
+        "created_at": "2007-09-01",
+        "updated_at": "2007-09-01"
+    },
+    {
+        "id": 135,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 36,
+        "created_at": "2008-09-01",
+        "updated_at": "2008-09-01"
+    },
+    {
+        "id": 136,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 37,
+        "created_at": "2009-09-01",
+        "updated_at": "2009-09-01"
+    },
+    {
+        "id": 137,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 38,
+        "created_at": "2010-09-01",
+        "updated_at": "2010-09-01"
+    },
+    {
+        "id": 138,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 39,
+        "created_at": "2011-09-01",
+        "updated_at": "2011-09-01"
+    },
+    {
+        "id": 139,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 40,
+        "created_at": "2012-09-01",
+        "updated_at": "2012-09-01"
+    },
+    {
+        "id": 140,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 41,
+        "created_at": "2013-09-01",
+        "updated_at": "2013-09-01"
+    },
+    {
+        "id": 141,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 42,
+        "created_at": "2014-09-01",
+        "updated_at": "2014-09-01"
+    },
+    {
+        "id": 142,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 43,
+        "created_at": "2015-09-01",
+        "updated_at": "2015-09-01"
+    },
+    {
+        "id": 143,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 44,
+        "created_at": "2016-09-01",
+        "updated_at": "2016-09-01"
+    },
+    {
+        "id": 144,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 45,
+        "created_at": "2017-09-01",
+        "updated_at": "2017-09-01"
+    },
+    {
+        "id": 145,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 46,
+        "created_at": "2018-09-01",
+        "updated_at": "2018-09-01"
+    },
+    {
+        "id": 146,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 47,
+        "created_at": "2019-09-01",
+        "updated_at": "2019-09-01"
+    },
+    {
+        "id": 147,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 48,
+        "created_at": "2020-09-01",
+        "updated_at": "2020-09-01"
+    },
+    {
+        "id": 148,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 49,
+        "created_at": "2021-09-01",
+        "updated_at": "2021-09-01"
+    },
+    {
+        "id": 149,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 50,
+        "created_at": "2022-09-01",
+        "updated_at": "2022-09-01"
+    },
+    {
+        "id": 150,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 51,
+        "created_at": "2023-09-01",
+        "updated_at": "2023-09-01"
+    },
+    {
+        "id": 151,
+        "semester_name": "Học kỳ III",
+        "order_number": 3,
+        "academic_year_id": 52,
+        "created_at": "2024-09-01",
+        "updated_at": "2024-09-01"
+    }
+]

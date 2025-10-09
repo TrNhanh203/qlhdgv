@@ -1,0 +1,122 @@
+[
+    {
+        "id": 1,
+        "migration": "2025_08_24_083044_create_universities_table",
+        "batch": 1
+    },
+    {
+        "id": 2,
+        "migration": "2025_08_24_083055_create_status_codes_table",
+        "batch": 1
+    },
+    {
+        "id": 3,
+        "migration": "2025_08_24_083056_create_module_types_table",
+        "batch": 1
+    },
+    {
+        "id": 4,
+        "migration": "2025_08_24_083105_create_faculties_table",
+        "batch": 1
+    },
+    {
+        "id": 5,
+        "migration": "2025_08_24_083106_create_departments_table",
+        "batch": 1
+    },
+    {
+        "id": 6,
+        "migration": "2025_08_24_083111_create_academic_years_table",
+        "batch": 1
+    },
+    {
+        "id": 7,
+        "migration": "2025_08_24_083112_create_semesters_table",
+        "batch": 1
+    },
+    {
+        "id": 8,
+        "migration": "2025_08_24_083118_create_roles_table",
+        "batch": 1
+    },
+    {
+        "id": 9,
+        "migration": "2025_08_24_083139_create_lectures_table",
+        "batch": 1
+    },
+    {
+        "id": 10,
+        "migration": "2025_08_24_083141_create_users_table",
+        "batch": 1
+    },
+    {
+        "id": 11,
+        "migration": "2025_08_24_083142_create_lecture_roles_table",
+        "batch": 1
+    },
+    {
+        "id": 12,
+        "migration": "2025_08_24_083145_create_role_permissions_table",
+        "batch": 1
+    },
+    {
+        "id": 13,
+        "migration": "2025_08_24_083150_create_education_programs_table",
+        "batch": 1
+    },
+    {
+        "id": 14,
+        "migration": "2025_08_24_083154_create_courses_table",
+        "batch": 1
+    },
+    {
+        "id": 15,
+        "migration": "2025_08_24_083200_create_rooms_table",
+        "batch": 1
+    },
+    {
+        "id": 16,
+        "migration": "2025_08_24_083201_create_teaching_duties_table",
+        "batch": 1
+    },
+    {
+        "id": 17,
+        "migration": "2025_08_24_083207_create_exams_table",
+        "batch": 1
+    },
+    {
+        "id": 18,
+        "migration": "2025_08_24_083216_create_exam_proctorings_table",
+        "batch": 1
+    },
+    {
+        "id": 19,
+        "migration": "2025_08_24_083222_create_meetings_table",
+        "batch": 1
+    },
+    {
+        "id": 20,
+        "migration": "2025_08_24_083222_create_workloads_table",
+        "batch": 1
+    },
+    {
+        "id": 21,
+        "migration": "2025_08_24_083227_create_attachments_table",
+        "batch": 1
+    },
+    {
+        "id": 22,
+        "migration": "2025_08_24_083227_create_audit_logs_table",
+        "batch": 1
+    },
+    {
+        "id": 23,
+        "migration": "2025_08_24_093219_create_sessions_table",
+        "batch": 1
+    },
+    {
+        "id": 24,
+        "migration": "2025_08_24_124456_create_cache_table",
+        "batch": 2
+    }
+]

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "role_name": "truongkhoa",
+        "description": "Người quản lý khoa",
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 2,
+        "role_name": "truongbomonn",
+        "description": "Người quản lý bộ môn",
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 3,
+        "role_name": "giangvien",
+        "description": "Giảng viên thường",
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    }
+]

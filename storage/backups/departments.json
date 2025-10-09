@@ -1,0 +1,236 @@
+[
+    {
+        "id": 1,
+        "department_name": "Công Nghệ Thông Tin",
+        "department_code": "CNTT",
+        "faculty_id": 1,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 2,
+        "department_name": "Công Nghệ Thông Tin",
+        "department_code": "CNTT",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-08-29",
+        "updated_at": "2025-08-29"
+    },
+    {
+        "id": 5,
+        "department_name": "Mạng và An toàn thông tin",
+        "department_code": "M&ATTT",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-09-20"
+    },
+    {
+        "id": 6,
+        "department_name": "Bộ môn Cơ khí Chế tạo máy",
+        "department_code": "CT&CTM",
+        "faculty_id": 6,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-29"
+    },
+    {
+        "id": 7,
+        "department_name": "Bộ môn Cơ điện tử",
+        "department_code": "CĐT",
+        "faculty_id": 6,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-29"
+    },
+    {
+        "id": 9,
+        "department_name": "Tài chính - Ngân hàng",
+        "department_code": "TC&NH",
+        "faculty_id": 7,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-09-20"
+    },
+    {
+        "id": 10,
+        "department_name": "Bộ môn Điện tử Công suất",
+        "department_code": "CTCS",
+        "faculty_id": 8,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-26"
+    },
+    {
+        "id": 11,
+        "department_name": "Bộ môn Viễn thông",
+        "department_code": "VTT",
+        "faculty_id": 8,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-29"
+    },
+    {
+        "id": 12,
+        "department_name": "Quản trị Doanh nghiệp",
+        "department_code": null,
+        "faculty_id": 9,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 13,
+        "department_name": "Marketing",
+        "department_code": null,
+        "faculty_id": 9,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 14,
+        "department_name": "Sinh học Ứng dụng",
+        "department_code": "SHUD",
+        "faculty_id": 10,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-09-01"
+    },
+    {
+        "id": 15,
+        "department_name": "Công nghệ Thực phẩm",
+        "department_code": "CNTP",
+        "faculty_id": 10,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-09-01"
+    },
+    {
+        "id": 16,
+        "department_name": "Kỹ thuật Cơ sở",
+        "department_code": null,
+        "faculty_id": 18,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 17,
+        "department_name": "Công nghệ Vật liệu",
+        "department_code": null,
+        "faculty_id": 18,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 18,
+        "department_name": "Tiếng Anh",
+        "department_code": "TA",
+        "faculty_id": 11,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 20,
+        "department_name": "Bộ môn Luật Dân sự",
+        "department_code": "LDS",
+        "faculty_id": 12,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 21,
+        "department_name": "Bộ môn Luật Hình sự",
+        "department_code": "LHS",
+        "faculty_id": 12,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 22,
+        "department_name": "Bộ môn Trồng trọt",
+        "department_code": null,
+        "faculty_id": 13,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 23,
+        "department_name": "Bộ môn Chăn nuôi",
+        "department_code": null,
+        "faculty_id": 13,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 24,
+        "department_name": "Bộ môn Y học Cơ sở",
+        "department_code": null,
+        "faculty_id": 14,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 25,
+        "department_name": "Bộ môn Dược học",
+        "department_code": null,
+        "faculty_id": 14,
+        "status_id": 1,
+        "created_at": "2025-08-24",
+        "updated_at": "2025-08-24"
+    },
+    {
+        "id": 26,
+        "department_name": "Hệ Thống Thông Tin",
+        "department_code": "HTTT",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-08-29",
+        "updated_at": "2025-08-29"
+    },
+    {
+        "id": 27,
+        "department_name": "Khoa Học Máy Tính",
+        "department_code": "KHMT",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-09-03",
+        "updated_at": "2025-09-03"
+    },
+    {
+        "id": 28,
+        "department_name": "Mạng và An toàn thông tin",
+        "department_code": "MANGVAANTO",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-09-10",
+        "updated_at": "2025-09-10"
+    },
+    {
+        "id": 31,
+        "department_name": "Kỹ Thuật Phần Mềm",
+        "department_code": "KTPM",
+        "faculty_id": 5,
+        "status_id": 1,
+        "created_at": "2025-09-20",
+        "updated_at": "2025-09-20"
+    },
+    {
+        "id": 33,
+        "department_name": "Quản Trị Kinh Doanh",
+        "department_code": "QTKD",
+        "faculty_id": 10,
+        "status_id": 1,
+        "created_at": "2025-09-20",
+        "updated_at": "2025-09-20"
+    }
+]

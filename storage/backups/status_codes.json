@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "name": "Đang hoạt động",
+        "description": "Trạng thái đang hoạt động",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 2,
+        "name": "Không hoạt động",
+        "description": "Trạng thái đã bị vô hiệu hóa",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "name": "Ngừng hoạt động",
+        "description": "Trạng thái đã ngừng hoạt động",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 4,
+        "name": "Tạm dừng",
+        "description": "Trạng thái tạm dừng",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 5,
+        "name": "Hoàn thành",
+        "description": "Trạng thái đã hoàn thành",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 6,
+        "name": "Chưa hoàn thành",
+        "description": "Trạng thái chưa hoàn thành",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 7,
+        "name": "Đã bị khóa",
+        "description": "trạng thái đã bị khóa",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 8,
+        "name": "Đang công tác",
+        "description": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 9,
+        "name": "Tạm nghỉ",
+        "description": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 10,
+        "name": "Chuyển công tác",
+        "description": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 11,
+        "name": "Đã duyệt",
+        "description": null,
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 12,
+        "name": "Chưa duyệt",
+        "description": null,
+        "created_at": null,
+        "updated_at": null
+    }
+]
