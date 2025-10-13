@@ -63,6 +63,7 @@ use App\Http\Controllers\GiangVien\DashboardController as GiangVienDashboardCont
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/first-login/change-password', [FirstLoginController::class, 'showChangeForm'])
         ->name('first-login.form');
@@ -88,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
 // ====================== ADMIN ======================
 Route::prefix('admin')
-    ->middleware(['auth', 'role:admin','check.first.login'])
+    ->middleware(['auth', 'role:admin', 'check.first.login'])
     ->name('admin.')
     ->group(function () {
 
@@ -121,9 +122,9 @@ Route::prefix('admin')
         Route::post('/truongbomon/store', [BoMonController::class, 'storeTruongBoMon'])->name('truongbomon.store');
         Route::delete('/truongbomon/{id}', [BoMonController::class, 'destroyTruongBoMon'])->name('truongbomon.destroy');
         Route::post('/truongbomon/destroy-multiple', [BoMonController::class, 'destroyMultipleTruongBoMon'])
-        ->name('truongbomon.destroyMultiple');
+            ->name('truongbomon.destroyMultiple');
         Route::get('/bomon/getTruongBoMon/{id}', [BoMonController::class, 'getTruongBoMon'])
-        ->name('bomon.getTruongBoMon');
+            ->name('bomon.getTruongBoMon');
         // ======================= CHƯƠNG TRÌNH ĐÀO TẠO =======================
         Route::get('/chuongtrinhdaotao', [CurriculumController::class, 'index'])->name('chuongtrinhdaotao.index');
         Route::get('/chuongtrinhdaotao/create', [CurriculumController::class, 'create'])->name('chuongtrinhdaotao.create');
@@ -153,10 +154,10 @@ Route::prefix('admin')
         Route::put('/hocphan/{id}', [HocPhanController::class, 'update'])->name('hocphan.update');
         Route::delete('/hocphan/{id}', [HocPhanController::class, 'destroy'])->name('hocphan.destroy');
         ///////////////////////////////////////////////////
-         Route::get('/decuonghocphan', [CourseSyllabusController::class, 'index'])->name('decuonghocphan.index');
-    Route::post('/decuonghocphan/store', [CourseSyllabusController::class, 'store'])->name('decuonghocphan.store');
-    Route::delete('/decuonghocphan/{id}/delete', [CourseSyllabusController::class, 'destroy'])->name('decuonghocphan.delete');
-    Route::delete('/decuonghocphan/delete-multiple', [CourseSyllabusController::class, 'destroyMultiple'])->name('decuonghocphan.deleteMultiple');
+        Route::get('/decuonghocphan', [CourseSyllabusController::class, 'index'])->name('decuonghocphan.index');
+        Route::post('/decuonghocphan/store', [CourseSyllabusController::class, 'store'])->name('decuonghocphan.store');
+        Route::delete('/decuonghocphan/{id}/delete', [CourseSyllabusController::class, 'destroy'])->name('decuonghocphan.delete');
+        Route::delete('/decuonghocphan/delete-multiple', [CourseSyllabusController::class, 'destroyMultiple'])->name('decuonghocphan.deleteMultiple');
         // ======================= PHÒNG HỌC =======================
         Route::get('/phonghoc', [PhongHocController::class, 'index'])->name('phonghoc.index');
         Route::post('/phonghoc', [PhongHocController::class, 'store'])->name('phonghoc.store');
@@ -197,20 +198,26 @@ Route::prefix('admin')
         Route::post('/giangvien/import', [GiangVienController::class, 'import'])->name('giangvien.import');
         Route::get('/giangvien/export', [GiangVienController::class, 'export'])->name('giangvien.export');
         Route::get('/giangvien/template', [GiangVienController::class, 'template'])->name('giangvien.template');
-        
+
         // ======================= TÀI KHOẢN =======================
-        
+
         Route::get('/taikhoan', [TaiKhoanController::class, 'index'])->name('taikhoan.index');
         Route::post('/taikhoan', [TaiKhoanController::class, 'store'])->name('taikhoan.store');
         // ========================= PROFILE =========================
-        Route::get('/profile', function () { return view('profile.edit'); })->name('profile.edit');
-        Route::get('/profile/update', function () { return view('profile.update'); })->name('profile.update');
-        Route::get('/profile/destroy', function () { return view('profile.destroy'); })->name('profile.destroy');
+        Route::get('/profile', function () {
+            return view('profile.edit');
+        })->name('profile.edit');
+        Route::get('/profile/update', function () {
+            return view('profile.update');
+        })->name('profile.update');
+        Route::get('/profile/destroy', function () {
+            return view('profile.destroy');
+        })->name('profile.destroy');
     });
 
 // ====================== SUPERADMIN ======================
 Route::prefix('superadmin')
-    ->middleware(['auth', 'role:superadmin','check.first.login'])
+    ->middleware(['auth', 'role:superadmin', 'check.first.login'])
     ->name('superadmin.')
     ->group(function () {
         Route::get('/dashboard', [SuperAdminDashboardController::class, 'dashboard'])->name('dashboard');
@@ -234,7 +241,7 @@ Route::prefix('superadmin')
         Route::get('settings/backup', [SystemController::class, 'backup'])->name('settings.backup');
         Route::post('settings/backup/restore', [SystemController::class, 'restoreBackup'])->name('backup.restore');
         // Quản lý người dùng
-        
+
         Route::get('reports/universities', [ReportController::class, 'byUniversity'])->name('reports.universities');
         Route::get('reports/audit-logs', [ReportController::class, 'auditLogs'])->name('reports.audit');
         Route::get('notifications/index', [SystemNotificationController::class, 'index'])->name('notifications.index');
@@ -245,12 +252,12 @@ Route::prefix('superadmin')
     });
 
 // ====================== TRƯỞNG KHOA ======================
-    Route::prefix('truongkhoa')
-        ->middleware(['auth', 'role:truongkhoa','check.first.login'])
-        ->name('truongkhoa.')
-        ->group(function () {
+Route::prefix('truongkhoa')
+    ->middleware(['auth', 'role:truongkhoa', 'check.first.login'])
+    ->name('truongkhoa.')
+    ->group(function () {
         Route::get('/dashboard', [TruongKhoaDashboardController::class, 'dashboard'])->name('dashboard');
-       
+
         Route::get('/bomon', [TruongKhoaBoMonController::class, 'index'])->name('bomon.index');
         Route::get('/giangvien', [TruongKhoaGiangVienController::class, 'index'])->name('giangvien.index');
         Route::get('/chuongtrinhhocphan/chuongtrinh', [ChuongTrinhHocPhanController::class, 'chuongtrinh'])->name('chuongtrinhhocphan.chuongtrinh');
@@ -260,7 +267,7 @@ Route::prefix('superadmin')
         Route::get('/khoiluongcongviec/klcongviec', [KhoiLuongController::class, 'khoiluong'])->name('khoiluongcongviec.klcongviec');
         Route::get('/phanconggiangday/phancong', [PhanCongController::class, 'phancong'])->name('phanconggiangday.phancong');
         Route::get('/cuochopkhoa/cuochop', [CuocHopController::class, 'cuochop'])->name('cuochopkhoa.cuochopkhoa');
-        Route::get('/baocaothongke/baocao', [BaoCaoController::class, 'baocao'])->name('baocaothongke.baocao');    
+        Route::get('/baocaothongke/baocao', [BaoCaoController::class, 'baocao'])->name('baocaothongke.baocao');
     });
 
 // ====================== TRƯỞNG BỘ MÔN ======================
@@ -272,9 +279,12 @@ Route::prefix('truongbomon')
         Route::get('/quanlygiangvien/dsgiangvien', [QLGiangVienController::class, 'dsgiangvien'])->name('quanlygiangvien.dsgiangvien');
         Route::get('/quanlygiangvien/phanconggiangday', [QLGiangVienController::class, 'phanconggiangday'])->name('quanlygiangvien.phanconggiangday');
         Route::get('/quanlygiangvien/theodoitiendo', [QLGiangVienController::class, 'theodoitiendo'])->name('quanlygiangvien.theodoitiendo');
+
         Route::get('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
+        Route::post('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
+
         Route::get('/dexuathi/dexuatlichthi', [DeXuatThiController::class, 'dexuatlichthi'])->name('dexuathi.dexuatlichthi');
-        Route::get('/dexuathi/dexuatdethi', [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');         
+        Route::get('/dexuathi/dexuatdethi', [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');
         Route::get('/duyetbaocao/hopchuyenmon', [DuyetBaoCaoController::class, 'hopchuyenmon'])->name('duyetbaocao.hopchuyenmon');
         Route::get('/duyetbaocao/klcongviec', [DuyetBaoCaoController::class, 'klcongviec'])->name('duyetbaocao.klcongviec');
         Route::get('/duyetbaocao/bcketthuchocphan', [DuyetBaoCaoController::class, 'bcketthuchocphan'])->name('duyetbaocao.bcketthuchocphan');

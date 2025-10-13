@@ -27,7 +27,7 @@ class Course extends Model
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 
-    
+
     public function faculty()
     {
         return $this->hasOneThrough(
@@ -42,20 +42,34 @@ class Course extends Model
     public function syllabuses()
     {
         return $this->hasMany(Attachment::class, 'entity_id')
-                    ->whereHas('moduleType', function($q){
-                        $q->where('name', 'course_syllabus');
-                    });
+            ->whereHas('moduleType', function ($q) {
+                $q->where('name', 'course_syllabus');
+            });
     }
 
     // Quan hệ tới EducationProgram
     public function educationProgram()
     {
-        return $this->belongsTo(EducationProgram::class, 'education_program_id');
+        // return $this->belongsTo(EducationProgram::class, 'education_program_id');
+        return $this->belongsTo(EducationProgram::class);
     }
 
     // Các quan hệ khác nếu cần, ví dụ TeachingDuty
     public function teachingDuties()
     {
         return $this->hasMany(TeachingDuty::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
