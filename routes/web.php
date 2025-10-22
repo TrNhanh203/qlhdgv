@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\FirstLoginController;
+use Illuminate\Support\Facades\Auth;
 
 // ADMIN Controllers
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -71,9 +72,30 @@ Route::middleware(['auth'])->group(function () {
         ->name('first-login.update');
 });
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
 Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+        switch ($user->user_type) {
+            case 'superadmin':
+                return redirect()->route('superadmin.dashboard');
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'truongkhoa':
+                return redirect()->route('truongkhoa.dashboard');
+            case 'truongbomon':
+                return redirect()->route('truongbomon.dashboard');
+            case 'giangvien':
+                return redirect()->route('giangvien.dashboard');
+            default:
+                return redirect()->route('profile.show');
+        }
+    }
     return view('welcome');
-});
+})->name('welcome');
 
 // ====================== AUTH ======================
 Route::middleware('guest')->group(function () {

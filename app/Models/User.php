@@ -52,17 +52,17 @@ class User extends Authenticatable
         return $this->belongsTo(Lecture::class, 'lecture_id', 'id');
     }
     public function getUniversityCode(): string
-{
-    if (!$this->email) {
-        return 'N/A';
+    {
+        if (!$this->email) {
+            return 'N/A';
+        }
+
+        $domainPart = explode('@', $this->email)[1] ?? '';
+
+        $code = explode('.', $domainPart)[0] ?? '';
+
+        return strtoupper($code);
     }
-
-    $domainPart = explode('@', $this->email)[1] ?? '';
-    
-    $code = explode('.', $domainPart)[0] ?? '';
-
-    return strtoupper($code); 
-}
     public function roles()
     {
         if ($this->lecture_id) {
@@ -76,28 +76,27 @@ class User extends Authenticatable
         return collect();
     }
 
-public function getFacultyName()
-{
-    if (!$this->lecture) {
+    public function getFacultyName()
+    {
+        if (!$this->lecture) {
+            return null;
+        }
+
+        $lecture = $this->lecture;
+
+        if ($lecture->department?->faculty) {
+            return $lecture->department->faculty->faculty_name;
+        }
+
+        $facultyRole = $lecture->roles()
+            ->where('role_name', 'truongkhoa')
+            ->first();
+
+        if ($facultyRole?->pivot?->faculty_id) {
+
+            return \App\Models\Faculty::find($facultyRole->pivot->faculty_id)?->faculty_name;
+        }
+
         return null;
     }
-
-    $lecture = $this->lecture;
-
-    if ($lecture->department?->faculty) {
-        return $lecture->department->faculty->faculty_name;
-    }
-
-    $facultyRole = $lecture->roles()
-        ->where('role_name', 'truongkhoa')
-        ->first();
-
-    if ($facultyRole?->pivot?->faculty_id) {
-        
-        return \App\Models\Faculty::find($facultyRole->pivot->faculty_id)?->faculty_name;
-    }
-
-    return null;
-}
-
 }
