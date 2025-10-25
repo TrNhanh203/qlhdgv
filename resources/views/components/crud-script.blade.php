@@ -7,6 +7,11 @@
         e.preventDefault();
         const data = {};
         document.querySelectorAll('#crudForm [data-field]').forEach(i => data[i.dataset.field] = i.value);
+
+        // thêm parent_id nếu có
+        const parentIdInput = document.getElementById('parentId');
+        if (parentIdInput) data.parent_id = parentIdInput.value;
+
         if (document.getElementById('crudId')) data.id = document.getElementById('crudId').value;
 
         try {

@@ -24,7 +24,7 @@ class EducationProgramController extends Controller
         //cấu hình cột hiển thị trong bảng
         $columns = [
             ['label' => 'Mã CTĐT', 'field' => 'program_code'],
-            ['label' => 'Tên CTĐT', 'field' => 'program_name'],
+            ['label' => 'Tên CTĐT', 'field' => 'program_name', 'link_to_child' => true],
             ['label' => 'Mã hệ', 'field' => 'education_system_code'],
             ['label' => 'Tên hệ', 'field' => 'education_system_name'],
         ];

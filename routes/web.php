@@ -51,6 +51,7 @@ use App\Http\Controllers\TruongKhoa\PhanCongController;
 use App\Http\Controllers\TruongKhoa\CuocHopController;
 use App\Http\Controllers\TruongKhoa\BaoCaoController;
 use App\Http\Controllers\TruongKhoa\EducationProgramController;
+use App\Http\Controllers\TruongKhoa\ProgramVersionController;
 
 
 use App\Http\Controllers\TruongBoMon\DashboardController as TruongBoMonDashboardController;
@@ -286,10 +287,19 @@ Route::prefix('truongkhoa')
         Route::post('/chuongtrinhdaotao/store', [EducationProgramController::class, 'store'])->name('chuongtrinhdaotao.store');
         Route::post('/chuongtrinhdaotao/delete-multiple', [EducationProgramController::class, 'destroyMultiple'])->name('chuongtrinhdaotao.destroyMultiple');
 
+        // 🔽 Nhóm route con cho PHIÊN BẢN
+        Route::prefix('/chuongtrinhdaotao/{program_id}/phienban')->name('phienban.')->group(function () {
+            Route::get('/', [ProgramVersionController::class, 'index'])->name('index');
+            Route::post('/store', [ProgramVersionController::class, 'store'])->name('store');
+            Route::post('/delete-multiple', [ProgramVersionController::class, 'destroyMultiple'])->name('destroyMultiple');
+        });
+
         Route::get('/bomon', [TruongKhoaBoMonController::class, 'index'])->name('bomon.index');
         Route::get('/giangvien', [TruongKhoaGiangVienController::class, 'index'])->name('giangvien.index');
         // Route::get('/chuongtrinhhocphan/chuongtrinh', [ChuongTrinhHocPhanController::class, 'chuongtrinh'])->name('chuongtrinhhocphan.chuongtrinh');
         Route::get('/chuongtrinhhocphan/hocphan', [ChuongTrinhHocPhanController::class, 'hocphan'])->name('chuongtrinhhocphan.hocphan');
+
+
         Route::get('/lichthicoithi/lichthi', [LichThiCoiThiController::class, 'lichthi'])->name('lichthicoithi.lichthi');
         Route::get('/lichthicoithi/coithi', [LichThiCoiThiController::class, 'coithi'])->name('lichthicoithi.coithi');
         Route::get('/khoiluongcongviec/klcongviec', [KhoiLuongController::class, 'khoiluong'])->name('khoiluongcongviec.klcongviec');

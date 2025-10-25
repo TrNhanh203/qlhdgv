@@ -24,7 +24,17 @@
                     <tr>
                         <td><input type="checkbox" class="row-check" value="{{ $item->id }}"></td>
                         @foreach ($columns as $col)
-                            <td>{{ $item->{$col['field']} }}</td>
+                            {{-- <td>{{ $item->{$col['field']} }}</td> --}}
+                            <td>
+                                @if (!empty($col['link_to_child']))
+                                    <a href="{{ route('truongkhoa.phienban.index', ['program_id' => $item->id]) }}"
+                                        class="text-primary">
+                                        {{ $item->{$col['field']} }}
+                                    </a>
+                                @else
+                                    {{ $item->{$col['field']} }}
+                                @endif
+                            </td>
                         @endforeach
                         <td>
                             <button class="btn btn-secondary" onclick="openEdit({{ json_encode($item) }})">⚙️</button>
@@ -41,6 +51,7 @@
             <h2 id="modalTitle">{{ $modalTitle ?? 'Thêm mới' }}</h2>
             <form id="crudForm">
                 <input type="hidden" id="crudId">
+                <input type="hidden" id="parentId" name="parent_id" value="{{ $parent_id ?? '' }}">
                 <div class="form-grid">
                     @foreach ($fields as $f)
                         <div class="form-group">
