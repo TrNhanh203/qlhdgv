@@ -1,4 +1,5 @@
 import './bootstrap';
+import './crud-core';
 
 import Alpine from 'alpinejs';
 
