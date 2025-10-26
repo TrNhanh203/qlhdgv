@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends($layout ?? 'layouts.app')
 @section('content')
     @include('components.crud-style')
 
@@ -23,25 +23,63 @@
                 @foreach ($items as $item)
                     <tr>
                         <td><input type="checkbox" class="row-check" value="{{ $item->id }}"></td>
+
                         @foreach ($columns as $col)
-                            {{-- <td>{{ $item->{$col['field']} }}</td> --}}
-                            <td>
-                                @if (!empty($col['link_to_child']))
-                                    <a href="{{ route('truongkhoa.phienban.index', ['program_id' => $item->id]) }}"
-                                        class="text-primary">
+                            @if (($col['type'] ?? '') === 'actions')
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots-vertical"></i> Thao tác
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            @foreach ($col['menu_items'] ?? [] as $menu)
+                                                @php
+                                                    $url = route($menu['route'], $item->{$menu['param']});
+                                                @endphp
+                                                <li>
+                                                    <a class="dropdown-item d-flex flex-column align-items-start"
+                                                        href="{{ $url }}">
+                                                        <div>
+                                                            @if (!empty($menu['icon']))
+                                                                <i class="{{ $menu['icon'] }} me-2"></i>
+                                                            @endif
+                                                            <strong>{{ $menu['text'] }}</strong>
+                                                        </div>
+                                                        @if (!empty($menu['desc']))
+                                                            <small class="text-muted ms-4">{{ $menu['desc'] }}</small>
+                                                        @endif
+                                                    </a>
+                                                </li>
+                                                @if (!$loop->last)
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </td>
+                            @else
+                                <td>
+                                    @if (!empty($col['link_to_child']))
+                                        <a href="{{ route('truongkhoa.phienban.index', ['program_id' => $item->id]) }}"
+                                            class="text-primary">
+                                            {{ $item->{$col['field']} }}
+                                        </a>
+                                    @else
                                         {{ $item->{$col['field']} }}
-                                    </a>
-                                @else
-                                    {{ $item->{$col['field']} }}
-                                @endif
-                            </td>
+                                    @endif
+                                </td>
+                            @endif
                         @endforeach
-                        <td>
-                            <button class="btn btn-secondary" onclick="openEdit({{ json_encode($item) }})">⚙️</button>
-                        </td>
+
+                        {{-- ⚙️ nút chỉnh sửa cũ có thể bỏ hoặc giữ tuỳ ý --}}
+                        <td><button class="btn btn-secondary" onclick="openEdit({{ json_encode($item) }})">⚙️</button></td>
                     </tr>
                 @endforeach
             </tbody>
+
         </table>
     </div>
 

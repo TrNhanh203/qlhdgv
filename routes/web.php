@@ -52,6 +52,7 @@ use App\Http\Controllers\TruongKhoa\CuocHopController;
 use App\Http\Controllers\TruongKhoa\BaoCaoController;
 use App\Http\Controllers\TruongKhoa\EducationProgramController;
 use App\Http\Controllers\TruongKhoa\ProgramVersionController;
+use App\Http\Controllers\TruongKhoa\PLOController;
 
 
 use App\Http\Controllers\TruongBoMon\DashboardController as TruongBoMonDashboardController;
@@ -294,6 +295,17 @@ Route::prefix('truongkhoa')
             Route::post('/delete-multiple', [ProgramVersionController::class, 'destroyMultiple'])->name('destroyMultiple');
         });
 
+        // Quản lý PLO–PI theo phiên bản CTĐT
+        Route::prefix('/chuongtrinhdaotao/phienban/{version_id}/plo')->name('plo.')->group(function () {
+            Route::get('/', [PLOController::class, 'index'])->name('index');
+            Route::post('/store-plo', [PLOController::class, 'storePLO'])->name('storePLO');
+            Route::post('/delete-plo', [PLOController::class, 'deletePLO'])->name('deletePLO');
+
+            Route::post('/store-pi', [PLOController::class, 'storePI'])->name('storePI');
+            Route::post('/delete-pi', [PLOController::class, 'deletePI'])->name('deletePI');
+        });
+
+
         Route::get('/bomon', [TruongKhoaBoMonController::class, 'index'])->name('bomon.index');
         Route::get('/giangvien', [TruongKhoaGiangVienController::class, 'index'])->name('giangvien.index');
         // Route::get('/chuongtrinhhocphan/chuongtrinh', [ChuongTrinhHocPhanController::class, 'chuongtrinh'])->name('chuongtrinhhocphan.chuongtrinh');
@@ -335,3 +347,9 @@ Route::prefix('giangvien')
     ->group(function () {
         Route::get('/dashboard', [GiangVienDashboardController::class, 'dashboard'])->name('dashboard');
     });
+
+
+
+Route::get('/demo/plo-pi', function () {
+    return view('demo.plo-pi');
+});

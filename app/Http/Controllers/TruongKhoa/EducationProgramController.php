@@ -27,6 +27,20 @@ class EducationProgramController extends Controller
             ['label' => 'Tên CTĐT', 'field' => 'program_name', 'link_to_child' => true],
             ['label' => 'Mã hệ', 'field' => 'education_system_code'],
             ['label' => 'Tên hệ', 'field' => 'education_system_name'],
+            [
+                'label' => 'Thao tác',
+                'type' => 'actions',
+                'menu_items' => [
+                    [
+                        'text' => 'PLOs và PIs',
+                        'desc' => 'Xem và quản lý các PLO và PI của chương trình đào tạo này',
+                        'route' => 'truongkhoa.plo.index',
+                        'param' => 'id',
+                        'icon' => 'bi bi-diagram-3'
+                    ],
+
+                ]
+            ]
         ];
 
         //cấu hình các trường trong form thêm/sửa
@@ -44,7 +58,8 @@ class EducationProgramController extends Controller
         ];
 
         return view('shared.crud-template', compact('items', 'columns', 'fields', 'routes'))
-            ->with('title', 'Chương trình đào tạo');
+            ->with('title', 'Chương trình đào tạo')
+            ->with('layout', 'layouts.apptruongkhoa');
     }
 
     public function store(Request $r)

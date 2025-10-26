@@ -22,6 +22,19 @@ class ProgramVersionController extends Controller
             ['label' => 'Hiệu lực từ', 'field' => 'effective_from'],
             ['label' => 'Hiệu lực đến', 'field' => 'effective_to'],
             ['label' => 'Trạng thái', 'field' => 'status'],
+            [
+                'label' => 'Thao tác',
+                'type' => 'actions',
+                'menu_items' => [
+                    [
+                        'text' => 'Chuẩn đầu ra (PLO & PI)',
+                        'desc' => 'Xem và quản lý PLO–PI thuộc phiên bản này',
+                        'route' => 'truongkhoa.plo.index',
+                        'param' => 'id', // 🟢 chính là version_id
+                        'icon' => 'bi bi-list-check'
+                    ],
+                ]
+            ],
         ];
 
         $fields = [
@@ -48,6 +61,7 @@ class ProgramVersionController extends Controller
 
         return view('shared.crud-template', compact('items', 'columns', 'fields', 'routes'))
             ->with('title', 'Phiên bản CTĐT: ' . $program->program_name)
+            ->with('layout', 'layouts.apptruongkhoa')
             ->with('parent_id', $program_id);
     }
 
