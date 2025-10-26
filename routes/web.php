@@ -333,6 +333,12 @@ Route::prefix('truongbomon')
         Route::get('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
         Route::post('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
 
+        // === HỌC PHẦN (courses) cho Trưởng bộ môn ===
+        Route::get('/quanlyhocphan/dshocphan',        [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
+        Route::post('/quanlyhocphan/dshocphan',        [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
+        Route::post('/quanlyhocphan/delete-multiple',  [QLHocPhanController::class, 'destroyMultiple'])->name('quanlyhocphan.destroyMultiple');
+
+
         Route::get('/dexuathi/dexuatlichthi', [DeXuatThiController::class, 'dexuatlichthi'])->name('dexuathi.dexuatlichthi');
         Route::get('/dexuathi/dexuatdethi', [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');
         Route::get('/duyetbaocao/hopchuyenmon', [DuyetBaoCaoController::class, 'hopchuyenmon'])->name('duyetbaocao.hopchuyenmon');
