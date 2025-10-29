@@ -97,7 +97,7 @@ class QLHocPhanController extends Controller
             'columns' => $columns,
             'fields' => $fields,
             'routes' => $routes,
-        ]);
+        ])->with('layout', 'layouts.appbomon');
     }
 
     public function store(Request $r)

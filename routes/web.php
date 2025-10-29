@@ -359,3 +359,11 @@ Route::prefix('giangvien')
 Route::get('/demo/plo-pi', function () {
     return view('demo.plo-pi');
 });
+
+Route::get('/demo/ctdt_khung_demo_static', function () {
+    return view('demo.ctdt_khung_demo_static');
+});
+
+Route::get('/demo/ctdt_khung_crud.blade', function () {
+    return view('demo.ctdt_khung_crud');
+});
