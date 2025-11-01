@@ -306,13 +306,16 @@ Route::prefix('truongkhoa')
             Route::post('/delete-pi', [PLOController::class, 'deletePI'])->name('deletePI');
         });
 
-        // === KHUNG CTĐT (Danh sách học phần theo phiên bản) ===
+
+
+        // === CRUD TRONG KHUNG CTĐT (Danh sách học phần theo phiên bản) ===
         Route::prefix('/chuongtrinhdaotao/phienban/{version_id}/khung')
             ->name('ctdtkhung.')
             ->group(function () {
                 Route::get('/', [OutlineProgramCourseController::class, 'index'])->name('index');
                 Route::post('/store', [OutlineProgramCourseController::class, 'store'])->name('store');
                 Route::post('/delete-multiple', [OutlineProgramCourseController::class, 'destroyMultiple'])->name('destroyMultiple');
+                Route::get('/overview', [OutlineProgramCourseController::class, 'overview'])->name('overview');
             });
 
 

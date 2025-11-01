@@ -98,17 +98,35 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label>Loại kiến thức</label>
-                        <select data-field="knowledge_type">
+                        <select data-field="knowledge_type" class="form-select">
                             <option value="kien_thuc_chung">Kiến thức chung</option>
                             <option value="kien_thuc_khoa_hoc_co_ban">Kiến thức khoa học cơ bản</option>
                             <option value="kien_thuc_bo_tro">Kiến thức bổ trợ</option>
-                            <option value="kien_thuc_co_so_nganh_lien_nganh">Kiến thức cơ sở ngành/liên ngành</option>
+                            <option value="kien_thuc_co_so_nganh_lien_nganh">Kiến thức cơ sở ngành / liên ngành</option>
                             <option value="kien_thuc_chuyen_nganh">Kiến thức chuyên ngành</option>
-                            <option value="do_an_thuc_tap">Đồ án - Thực tập</option>
+                            <option value="hoc_phan_nghe_nghiep">Học phần nghề nghiệp (trải nghiệm nghề nghiệp)</option>
+                            <option value="hoc_phan_thuc_tap_tot_nghiep">Học phần thực tập tốt nghiệp (tập sự nghề nghiệp)
+                            </option>
+                            <option value="hoc_phan_tot_nghiep">Học phần tốt nghiệp</option>
+                            <option value="khoi_kien_thuc_dieu_kien_tot_nghiep">Khối kiến thức điều kiện xét tốt nghiệp
+                            </option>
+                            <option value="khoi_kien_thuc_ky_su_dac_thu">Khối kiến thức học kỹ sư đặc thù</option>
+                            <option value="do_an_thuc_tap">Đồ án / Thực tập</option>
+                            <option value="khac">Khác</option>
+                        </select>
+                    </div> --}}
+                    <div class="form-group">
+                        <label>Loại kiến thức</label>
+                        <select data-field="knowledge_type" class="form-select">
+                            @foreach ($knowledgeTypeLabels as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
+
+
 
                     <div class="form-group">
                         <label>Nhóm học phần</label>
