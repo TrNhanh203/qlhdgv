@@ -33,6 +33,13 @@ class ProgramVersionController extends Controller
                         'param' => 'id', // 🟢 chính là version_id
                         'icon' => 'bi bi-list-check'
                     ],
+                    [
+                        'text'  => 'Khung CTĐT (Học phần)',
+                        'desc'  => 'Quản lý danh sách học phần của phiên bản CTĐT',
+                        'route' => 'truongkhoa.ctdtkhung.index',
+                        'param' => 'id', // version_id
+                        'icon'  => 'bi bi-grid-3x3-gap'
+                    ],
                 ]
             ],
         ];

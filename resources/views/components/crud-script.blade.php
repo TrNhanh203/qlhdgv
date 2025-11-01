@@ -1,4 +1,5 @@
-<script src="{{ asset('js/crud-core.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+@vite(['resources/js/crud-core.js'])
 <script>
     const ROUTE_STORE = "{{ $routes['store'] ?? '' }}";
     const ROUTE_DELETE_MULTI = "{{ $routes['destroyMultiple'] ?? '' }}";

@@ -53,6 +53,7 @@ use App\Http\Controllers\TruongKhoa\BaoCaoController;
 use App\Http\Controllers\TruongKhoa\EducationProgramController;
 use App\Http\Controllers\TruongKhoa\ProgramVersionController;
 use App\Http\Controllers\TruongKhoa\PLOController;
+use App\Http\Controllers\TruongKhoa\OutlineProgramCourseController;
 
 
 use App\Http\Controllers\TruongBoMon\DashboardController as TruongBoMonDashboardController;
@@ -304,6 +305,16 @@ Route::prefix('truongkhoa')
             Route::post('/store-pi', [PLOController::class, 'storePI'])->name('storePI');
             Route::post('/delete-pi', [PLOController::class, 'deletePI'])->name('deletePI');
         });
+
+        // === KHUNG CTĐT (Danh sách học phần theo phiên bản) ===
+        Route::prefix('/chuongtrinhdaotao/phienban/{version_id}/khung')
+            ->name('ctdtkhung.')
+            ->group(function () {
+                Route::get('/', [OutlineProgramCourseController::class, 'index'])->name('index');
+                Route::post('/store', [OutlineProgramCourseController::class, 'store'])->name('store');
+                Route::post('/delete-multiple', [OutlineProgramCourseController::class, 'destroyMultiple'])->name('destroyMultiple');
+            });
+
 
 
         Route::get('/bomon', [TruongKhoaBoMonController::class, 'index'])->name('bomon.index');

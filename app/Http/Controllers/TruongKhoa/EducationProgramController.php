@@ -32,9 +32,9 @@ class EducationProgramController extends Controller
                 'type' => 'actions',
                 'menu_items' => [
                     [
-                        'text' => 'PLOs và PIs',
-                        'desc' => 'Xem và quản lý các PLO và PI của chương trình đào tạo này',
-                        'route' => 'truongkhoa.plo.index',
+                        'text' => 'Quản lý phiên bản',
+                        'desc' => 'Xem và quản lý các phiên bản của chương trình đào tạo này',
+                        'route' => 'truongkhoa.phienban.index',
                         'param' => 'id',
                         'icon' => 'bi bi-diagram-3'
                     ],

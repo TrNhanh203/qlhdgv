@@ -62,14 +62,16 @@
                                 </td>
                             @else
                                 <td>
-                                    @if (!empty($col['link_to_child']))
+                                    {{-- @if (!empty($col['link_to_child']))
                                         <a href="{{ route('truongkhoa.phienban.index', ['program_id' => $item->id]) }}"
                                             class="text-primary">
                                             {{ $item->{$col['field']} }}
                                         </a>
                                     @else
                                         {{ $item->{$col['field']} }}
-                                    @endif
+                                    @endif --}}
+                                    {{ $item->{$col['field']} }}
+
                                 </td>
                             @endif
                         @endforeach

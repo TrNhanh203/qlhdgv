@@ -355,6 +355,8 @@
             }
         });
     </script>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastArea" style="z-index: 9999;"></div>
+
     @stack('scripts')
 </body>
 
