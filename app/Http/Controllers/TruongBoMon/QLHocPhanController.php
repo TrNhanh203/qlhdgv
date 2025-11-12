@@ -50,7 +50,7 @@ class QLHocPhanController extends Controller
 
         $q = DB::table('courses as c')
             ->leftJoin('departments as d', 'd.id', '=', 'c.department_id')
-            ->select('c.*', 'd.department_name')
+            ->select('c.id', 'c.course_code', 'c.course_name', 'd.department_name')
             ->orderBy('c.course_code');
 
         if ($deptList->count() === 1) {
@@ -65,14 +65,12 @@ class QLHocPhanController extends Controller
         $columns = [
             ['label' => 'Mã HP', 'field' => 'course_code'],
             ['label' => 'Tên học phần', 'field' => 'course_name'],
-            ['label' => 'Tín chỉ', 'field' => 'credit'],
             ['label' => 'Bộ môn', 'field' => 'department_name'],
         ];
 
         $fields = [
             ['name' => 'course_code', 'label' => 'Mã học phần', 'type' => 'text', 'required' => true],
             ['name' => 'course_name', 'label' => 'Tên học phần', 'type' => 'text', 'required' => true],
-            ['name' => 'credit', 'label' => 'Tín chỉ', 'type' => 'number', 'required' => true],
         ];
 
         if ($deptList->count() > 1) {
@@ -112,8 +110,7 @@ class QLHocPhanController extends Controller
 
         $rules = [
             'course_code' => ['required', 'string', 'max:100', Rule::unique('courses', 'course_code')->ignore($id)],
-            'course_name' => ['required', 'string', 'max:250'],
-            'credit' => ['required', 'integer', 'min:0', 'max:20'],
+            'course_name' => ['required', 'string', 'max:255'],
         ];
 
         if ($deptList->count() > 1) {
@@ -127,17 +124,18 @@ class QLHocPhanController extends Controller
             : (int)$data['department_id'];
 
         $payload = [
-            'course_code' => $data['course_code'],
-            'course_name' => $data['course_name'],
-            'credit' => $data['credit'],
+            'course_code'   => $data['course_code'],
+            'course_name'   => $data['course_name'],
             'department_id' => $departmentId,
-            'updated_by' => $user->id,
+            'updated_by'    => $user->id,
+            'updated_at'    => now(),
         ];
 
         if ($id) {
             DB::table('courses')->where('id', $id)->update($payload);
         } else {
             $payload['created_by'] = $user->id;
+            $payload['created_at'] = now();
             DB::table('courses')->insert($payload);
         }
 

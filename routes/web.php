@@ -54,6 +54,7 @@ use App\Http\Controllers\TruongKhoa\EducationProgramController;
 use App\Http\Controllers\TruongKhoa\ProgramVersionController;
 use App\Http\Controllers\TruongKhoa\PLOController;
 use App\Http\Controllers\TruongKhoa\OutlineProgramCourseController;
+use App\Http\Controllers\TruongKhoa\OutlineTemplateController;
 
 
 use App\Http\Controllers\TruongBoMon\DashboardController as TruongBoMonDashboardController;
@@ -307,7 +308,6 @@ Route::prefix('truongkhoa')
         });
 
 
-
         // === CRUD TRONG KHUNG CTĐT (Danh sách học phần theo phiên bản) ===
         Route::prefix('/chuongtrinhdaotao/phienban/{version_id}/khung')
             ->name('ctdtkhung.')
@@ -318,6 +318,19 @@ Route::prefix('truongkhoa')
                 Route::get('/overview', [OutlineProgramCourseController::class, 'overview'])->name('overview');
             });
 
+        // Quản lý mẫu đề cương
+        Route::prefix('outline-template')
+            ->name('outline-template.')
+            ->group(function () {
+                Route::get('/', [OutlineTemplateController::class, 'index'])->name('index');
+                Route::post('/store', [OutlineTemplateController::class, 'store'])->name('store');
+                Route::post('/delete-multiple', [OutlineTemplateController::class, 'destroyMultiple'])->name('destroyMultiple');
+                // (sau này thêm /edit, /clone, /create ...)
+                // ✅ Route mở trình soạn thảo mẫu đề cương
+                Route::get('/editor', [OutlineTemplateController::class, 'editor'])->name('editor');
+
+                Route::get('/edit/{id}', [OutlineTemplateController::class, 'edit'])->name('edit');
+            });
 
 
         Route::get('/bomon', [TruongKhoaBoMonController::class, 'index'])->name('bomon.index');
@@ -381,3 +394,9 @@ Route::get('/demo/ctdt_khung_demo_static', function () {
 Route::get('/demo/ctdt_khung_crud.blade', function () {
     return view('demo.ctdt_khung_crud');
 });
+
+Route::get('/demo/outline-template-editor', function () {
+    return view('demo.outline_template_editor', [
+        'layout' => 'layouts.apptruongkhoa',
+    ]);
+})->name('demo.outline-template-editor');

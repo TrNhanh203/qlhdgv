@@ -4,7 +4,14 @@
 
     <div class="container">
         <h1>{{ $title ?? 'Danh sách' }}</h1>
-
+        @if (!empty($customAddButton))
+            <button class="btn btn-primary d-flex align-items-center gap-1" id="btnCustomAdd">
+                @if (!empty($customAddButton['icon']))
+                    <i class="{{ $customAddButton['icon'] }}"></i>
+                @endif
+                <span>{{ $customAddButton['label'] }}</span>
+            </button>
+        @endif
         <button class="btn btn-primary" onclick="document.getElementById('crudModal').style.display='flex'">+ Thêm
             mới</button>
         <button id="deleteBtn" class="btn btn-disabled" disabled>Xóa</button>
@@ -120,6 +127,12 @@
         </div>
     </div>
 
+    <!-- Confirm Redirect Modal -->
+
+
+
+
+
     @include('components.crud-script')
 
     <script>
@@ -129,4 +142,35 @@
             document.getElementById('crudModal').style.display = 'flex';
         }
     </script>
+    @if (!empty($customAddButton))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const oldBtn = document.querySelector('button[onclick*="crudModal"]');
+                if (oldBtn) oldBtn.style.display = 'none';
+
+                const btn = document.getElementById('btnCustomAdd');
+                if (!btn) return;
+
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Xác nhận',
+                        text: @json($customAddButton['confirm'] ?? 'Bạn có chắc muốn thực hiện thao tác này?'),
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy',
+                        reverseButtons: true,
+                        confirmButtonColor: '#0d6efd'
+                    }).then(result => {
+                        if (result.isConfirmed) {
+                            window.location.href = @json($customAddButton['route']);
+                        }
+                    });
+                });
+            });
+        </script>
+    @endif
+
+
 @endsection

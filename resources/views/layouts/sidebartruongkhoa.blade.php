@@ -66,13 +66,21 @@
 
             </ul>
         </li> --}}
-        <!-- Phân công & Kế hoạch giảng dạy -->
+
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('truongkhoa.outline-template.index') }}">
+                <i class="bi bi-pencil-square menu-icon"></i>
+                <span class="menu-text">Quản lý mẫu đề cương</span>
+            </a>
+        </li>
+
+        <!-- Phân công & Kế hoạch giảng dạy -->
+        {{-- <li class="nav-item">
             <a class="nav-link" href="{{ route('truongkhoa.phanconggiangday.phancong') }}">
                 <i class="bi bi-person-check menu-icon"></i>
                 <span class="menu-text">Phân công giảng dạy</span>
             </a>
-        </li>
+        </li> --}}
 
         <!-- Cuộc họp khoa -->
         {{-- <li class="nav-item">

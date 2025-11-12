@@ -44,7 +44,12 @@
                     @forelse($courses as $it)
                         <tr>
                             <td><input type="checkbox" class="row-check" value="{{ $it->id }}"></td>
-                            <td class="text-center">{{ $it->semester_no ?? '-' }}</td>
+                            {{-- <td class="text-center">{{ $it->semester_no ?? '-' }}</td> --}}
+                            <td class="text-center">
+                                {{-- Hiển thị theo liên kết thật --}}
+                                {{ $it->semester_name ? $it->semester_name : '-' }}
+                                {{ $it->year_code ? ' (' . $it->year_code . ')' : '' }}
+                            </td>
                             <td>{{ $it->course_code }}</td>
                             <td>{{ $it->course_name }}</td>
                             <td>{{ $it->knowledge_type }}</td>
@@ -98,25 +103,7 @@
                         </select>
                     </div>
 
-                    {{-- <div class="form-group">
-                        <label>Loại kiến thức</label>
-                        <select data-field="knowledge_type" class="form-select">
-                            <option value="kien_thuc_chung">Kiến thức chung</option>
-                            <option value="kien_thuc_khoa_hoc_co_ban">Kiến thức khoa học cơ bản</option>
-                            <option value="kien_thuc_bo_tro">Kiến thức bổ trợ</option>
-                            <option value="kien_thuc_co_so_nganh_lien_nganh">Kiến thức cơ sở ngành / liên ngành</option>
-                            <option value="kien_thuc_chuyen_nganh">Kiến thức chuyên ngành</option>
-                            <option value="hoc_phan_nghe_nghiep">Học phần nghề nghiệp (trải nghiệm nghề nghiệp)</option>
-                            <option value="hoc_phan_thuc_tap_tot_nghiep">Học phần thực tập tốt nghiệp (tập sự nghề nghiệp)
-                            </option>
-                            <option value="hoc_phan_tot_nghiep">Học phần tốt nghiệp</option>
-                            <option value="khoi_kien_thuc_dieu_kien_tot_nghiep">Khối kiến thức điều kiện xét tốt nghiệp
-                            </option>
-                            <option value="khoi_kien_thuc_ky_su_dac_thu">Khối kiến thức học kỹ sư đặc thù</option>
-                            <option value="do_an_thuc_tap">Đồ án / Thực tập</option>
-                            <option value="khac">Khác</option>
-                        </select>
-                    </div> --}}
+
                     <div class="form-group">
                         <label>Loại kiến thức</label>
                         <select data-field="knowledge_type" class="form-select">
@@ -142,10 +129,29 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label>Học kỳ</label>
                         <input type="number" data-field="semester_no" min="1" max="10">
+                    </div> --}}
+
+                    <div class="form-group">
+                        <label>Năm học</label>
+                        <select id="academicYearSelect" data-field="academic_year_id" required>
+                            <option value="">-- chọn năm học --</option>
+                            @foreach ($academicYears as $y)
+                                <option value="{{ $y->id }}">{{ $y->year_code }}</option>
+                            @endforeach
+                        </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>Học kỳ</label>
+                        <select id="semesterSelect" data-field="semester_id" required>
+                            <option value="">-- chọn học kỳ --</option>
+                            {{-- sẽ được JS load động --}}
+                        </select>
+                    </div>
+
 
                     <div class="form-group">
                         <label>Tín chỉ lý thuyết</label>
@@ -173,9 +179,37 @@
     </div>
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Build mapping học kỳ theo năm học từ PHP
+            const SEMESTERS_BY_YEAR = @json(
+                $semesters->groupBy('academic_year_id')->map(
+                    fn($list) => $list->map(fn($s) => [
+                            'id' => $s->id,
+                            'name' => $s->semester_name,
+                        ])));
+
+            const yearSelect = document.getElementById('academicYearSelect');
+            const semesterSelect = document.getElementById('semesterSelect');
+
+            if (yearSelect && semesterSelect) {
+                yearSelect.addEventListener('change', () => {
+                    const yearId = yearSelect.value;
+                    semesterSelect.innerHTML = '<option value="">-- chọn học kỳ --</option>';
+                    if (SEMESTERS_BY_YEAR[yearId]) {
+                        SEMESTERS_BY_YEAR[yearId].forEach(s => {
+                            const opt = document.createElement('option');
+                            opt.value = s.id;
+                            opt.textContent = s.name;
+                            semesterSelect.appendChild(opt);
+                        });
+                    }
+                });
+            }
+
+
+
             const ROUTE_STORE = "{{ route('truongkhoa.ctdtkhung.store', ['version_id' => $version->id]) }}";
 
 
@@ -271,7 +305,10 @@
 
                     try {
                         const res = await CRUD.postJson(ROUTE_STORE, data);
-                        CRUD.toast(res.success ? "Lưu thành công" : "Lỗi khi lưu", res.success);
+                        // CRUD.toast(res.success ? "Lưu thành công" : "Lỗi khi lưu", res.success);
+                        CRUD.toast(res.success ? "Lưu thành công" : (res.message || "Lỗi khi lưu"), res
+                            .success);
+
 
                         if (res.success) setTimeout(() => location.reload(), 700);
                     } catch (err) {
@@ -310,6 +347,177 @@
                 });
             }
 
+        });
+    </script>
+@endpush --}}
+
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            /* ===========================================================
+               1️⃣ DỮ LIỆU HỌC KỲ THEO NĂM HỌC (load từ PHP)
+            ============================================================ */
+            const SEMESTERS_BY_YEAR = @json(
+                $semesters->groupBy('academic_year_id')->map(
+                    fn($list) => $list->map(fn($s) => [
+                            'id' => $s->id,
+                            'name' => $s->semester_name,
+                        ])));
+
+            // Map ngược: học kỳ → năm học
+            const SEM_TO_YEAR = (() => {
+                const m = {};
+                for (const [yearId, semList] of Object.entries(SEMESTERS_BY_YEAR)) {
+                    semList.forEach(s => m[s.id] = yearId);
+                }
+                return m;
+            })();
+
+            const yearSelect = document.getElementById('academicYearSelect');
+            const semesterSelect = document.getElementById('semesterSelect');
+
+            // Hàm load học kỳ theo năm học
+            function fillSemestersForYear(yearId) {
+                semesterSelect.innerHTML = '<option value="">-- chọn học kỳ --</option>';
+                const list = SEMESTERS_BY_YEAR[yearId] || [];
+                list.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = s.name;
+                    semesterSelect.appendChild(opt);
+                });
+            }
+
+            // Khi chọn năm học → load học kỳ tương ứng
+            if (yearSelect) {
+                yearSelect.addEventListener('change', () => {
+                    fillSemestersForYear(yearSelect.value);
+                });
+            }
+
+            /* ===========================================================
+               2️⃣ ROUTE & BIẾN CHUNG
+            ============================================================ */
+            const ROUTE_STORE = "{{ route('truongkhoa.ctdtkhung.store', ['version_id' => $version->id]) }}";
+            const ROUTE_DELETE_MULTI =
+                "{{ route('truongkhoa.ctdtkhung.destroyMultiple', ['version_id' => $version->id]) }}";
+            console.log("ROUTE_STORE =", ROUTE_STORE);
+
+            /* ===========================================================
+               3️⃣ HÀM THÊM MỚI
+            ============================================================ */
+            function openAdd() {
+                document.getElementById('crudId').value = '';
+                document.querySelectorAll('#crudForm [data-field]').forEach(i => i.value = '');
+                // reset Năm học & Học kỳ
+                if (yearSelect) yearSelect.value = '';
+                if (semesterSelect) semesterSelect.innerHTML = '<option value="">-- chọn học kỳ --</option>';
+
+                document.getElementById('modalTitle').innerText = 'Thêm học phần vào CTĐT';
+                document.getElementById('crudModal').style.display = 'flex';
+            }
+            window.openAdd = openAdd;
+
+            /* ===========================================================
+               4️⃣ HÀM SỬA DỮ LIỆU (fill lại Năm học + Học kỳ)
+            ============================================================ */
+            function openEdit(data) {
+                document.getElementById('crudId').value = data.id;
+
+                // Học phần
+                const courseSelect = document.querySelector('#crudForm [data-field="course_id"]');
+                if (courseSelect) courseSelect.value = data.course_id ?? '';
+
+                // Gán các trường khác trừ học kỳ và năm học
+                document.querySelectorAll('#crudForm [data-field]').forEach(i => {
+                    if (['course_id', 'academic_year_id', 'semester_id'].includes(i.dataset.field)) return;
+                    i.value = data[i.dataset.field] ?? '';
+                });
+
+                // Fill lại Năm học + Học kỳ nếu có semester_id
+                if (data.semester_id) {
+                    const foundYear = SEM_TO_YEAR[data.semester_id];
+                    if (foundYear) {
+                        yearSelect.value = foundYear;
+                        fillSemestersForYear(foundYear);
+                        semesterSelect.value = data.semester_id;
+                    } else {
+                        yearSelect.value = '';
+                        semesterSelect.innerHTML = '<option value="">-- chọn học kỳ --</option>';
+                    }
+                } else {
+                    yearSelect.value = '';
+                    semesterSelect.innerHTML = '<option value="">-- chọn học kỳ --</option>';
+                }
+
+                document.getElementById('modalTitle').innerText = 'Chỉnh sửa học phần';
+                document.getElementById('crudModal').style.display = 'flex';
+            }
+            window.openEdit = openEdit;
+
+            /* ===========================================================
+               5️⃣ SUBMIT FORM
+            ============================================================ */
+            const form = document.getElementById('crudForm');
+            if (form) {
+                form.addEventListener('submit', async e => {
+                    e.preventDefault();
+                    const btn = form.querySelector('button[type="submit"]');
+                    const originalText = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '⏳ Đang lưu...';
+
+                    const data = {};
+                    document.querySelectorAll('#crudForm [data-field]').forEach(i => {
+                        data[i.dataset.field] = i.value;
+                    });
+                    const idEl = document.getElementById('crudId');
+                    if (idEl.value) data.id = idEl.value;
+
+                    try {
+                        const res = await CRUD.postJson(ROUTE_STORE, data);
+                        CRUD.toast(res.success ? "Lưu thành công" : (res.message || "Lỗi khi lưu"), res
+                            .success);
+                        if (res.success) setTimeout(() => location.reload(), 700);
+                    } catch (err) {
+                        CRUD.toast("Request lỗi: " + err);
+                    } finally {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                });
+            }
+
+            /* ===========================================================
+               6️⃣ XÓA NHIỀU
+            ============================================================ */
+            const delBtn = document.getElementById('deleteBtn');
+            if (delBtn) {
+                delBtn.addEventListener('click', async () => {
+                    const ids = CRUD.getSelectedIds();
+                    if (ids.length === 0) return CRUD.toast("⚠️ Chưa chọn học phần nào để xóa.");
+                    if (!confirm("Xóa " + ids.length + " học phần đã chọn?")) return;
+
+                    const originalText = delBtn.innerHTML;
+                    delBtn.disabled = true;
+                    delBtn.innerHTML = '🗑️ Đang xóa...';
+
+                    try {
+                        const res = await CRUD.postJson(ROUTE_DELETE_MULTI, {
+                            ids
+                        });
+                        CRUD.toast(res.success ? "🗑️ Đã xóa thành công" : "❌ " + (res.message ||
+                            "Lỗi khi xóa"), res.success);
+                        if (res.success) setTimeout(() => location.reload(), 700);
+                    } catch (err) {
+                        CRUD.toast("❌ Request lỗi: " + err);
+                    } finally {
+                        delBtn.disabled = false;
+                        delBtn.innerHTML = originalText;
+                    }
+                });
+            }
         });
     </script>
 @endpush

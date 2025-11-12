@@ -80,7 +80,14 @@
                 <tbody>
                     @foreach ($items as $row)
                         <tr>
-                            <td class="text-center">{{ $row->semester_no }}</td>
+                            <td class="text-center">
+                                @php
+                                    $hk = $row->semester_order ? 'HK ' . $row->semester_order : '-';
+                                    $ten = $row->semester_name ?: '';
+                                    $nam = $row->year_code ? ' (' . $row->year_code . ')' : '';
+                                @endphp
+                                {{ trim($hk . ' ' . $ten) }}{{ $nam }}
+                            </td>
                             <td>{{ $row->course_code }}</td>
                             <td>{{ $row->course_name }}</td>
                             <td>{{ $row->course_group }}</td>
