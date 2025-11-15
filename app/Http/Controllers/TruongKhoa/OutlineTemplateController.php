@@ -339,10 +339,50 @@ class OutlineTemplateController extends Controller
 
     public function destroyMultiple(Request $r)
     {
-        DB::table('outline_templates')
-            ->whereIn('id', $r->ids ?? [])
-            ->delete();
+        $ids = $r->input('ids', []);
 
-        return response()->json(['success' => true]);
+        // Đảm bảo ids là mảng và có phần tử
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không có mẫu nào được chọn để xoá.',
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Nếu muốn giới hạn theo khoa của Trưởng khoa hiện tại:
+            $facultyId = DB::table('lecture_roles')
+                ->where('lecture_id', Auth::user()->lecture_id)
+                ->whereNotNull('faculty_id')
+                ->value('faculty_id');
+
+            // Xoá section con trước
+            DB::table('outline_section_templates')
+                ->whereIn('outline_template_id', $ids)
+                ->delete();
+
+            // Xoá template – kèm điều kiện faculty_id cho chắc
+            DB::table('outline_templates')
+                ->whereIn('id', $ids)
+                ->when($facultyId, function ($q) use ($facultyId) {
+                    $q->where('faculty_id', $facultyId);
+                })
+                ->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xoá các mẫu đề cương được chọn.',
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(), // dev debug, nếu ngại có thể đổi thành message chung chung
+            ], 500);
+        }
     }
 }
