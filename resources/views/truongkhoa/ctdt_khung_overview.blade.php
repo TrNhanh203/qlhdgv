@@ -8,7 +8,7 @@
             </h3>
             <a href="{{ route('truongkhoa.ctdtkhung.index', ['version_id' => $version->id]) }}"
                 class="btn btn-outline-primary">
-                🛠 Quản lý khung CTĐT
+                🛠 Quản lý học phần
             </a>
         </div>
 

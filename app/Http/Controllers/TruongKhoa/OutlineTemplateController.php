@@ -139,6 +139,77 @@ class OutlineTemplateController extends Controller
      *   "sections": [{code,title,order_no,default_content}]
      * }
      */
+    // public function store(Request $r)
+    // {
+    //     DB::beginTransaction();
+
+    //     try {
+    //         // Faculty hiện tại
+    //         $facultyId = DB::table('lecture_roles')
+    //             ->where('lecture_id', Auth::user()->lecture_id)
+    //             ->whereNotNull('faculty_id')
+    //             ->value('faculty_id');
+
+    //         $meta = $r->input('template_meta', []);
+    //         $sections = $r->input('sections', []);
+
+    //         // ==== Validate thủ công ====
+    //         if (empty($meta['code']) || empty($meta['name'])) {
+    //             throw new \Exception('Thiếu Mã mẫu hoặc Tên mẫu.');
+    //         }
+    //         if (empty($sections)) {
+    //             throw new \Exception('Mẫu đề cương phải có ít nhất một mục (section).');
+    //         }
+
+    //         // ==== Insert outline_templates ====
+    //         $templateId = DB::table('outline_templates')->insertGetId([
+    //             'faculty_id' => $facultyId,
+    //             'code' => $meta['code'],
+    //             'name' => $meta['name'],
+    //             'description' => $meta['description'] ?? null,
+    //             'is_default' => $meta['is_default'] ?? 0,
+    //             'gov_header' => $meta['gov_header'] ?? 'UBND TP. HỒ CHÍ MINH',
+    //             'university_name' => $meta['university_name'] ?? 'TRƯỜNG ĐH THỦ DẦU MỘT',
+    //             'national_header' => $meta['national_header'] ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
+    //             'national_motto' => $meta['national_motto'] ?? 'Độc lập - Tự do - Hạnh phúc',
+    //             'major_name' => $meta['major_name'] ?? null,
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ]);
+
+    //         // ==== Insert các section ====
+    //         foreach ($sections as $s) {
+    //             if (empty($s['code']) || empty($s['title'])) {
+    //                 throw new \Exception('Mỗi section phải có code và title.');
+    //             }
+
+    //             DB::table('outline_section_templates')->insert([
+    //                 'outline_template_id' => $templateId,
+    //                 'code' => $s['code'],
+    //                 'title' => $s['title'],
+    //                 'order_no' => (int)($s['order_no'] ?? 1),
+    //                 'default_content' => $s['default_content'] ?? '',
+    //                 'created_at' => now(),
+    //                 'updated_at' => now(),
+    //             ]);
+    //         }
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Đã lưu mẫu đề cương thành công.',
+    //             'id' => $templateId,
+    //         ]);
+    //     } catch (Throwable $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     public function store(Request $r)
     {
         DB::beginTransaction();
@@ -150,7 +221,7 @@ class OutlineTemplateController extends Controller
                 ->whereNotNull('faculty_id')
                 ->value('faculty_id');
 
-            $meta = $r->input('template_meta', []);
+            $meta     = $r->input('template_meta', []);
             $sections = $r->input('sections', []);
 
             // ==== Validate thủ công ====
@@ -161,23 +232,74 @@ class OutlineTemplateController extends Controller
                 throw new \Exception('Mẫu đề cương phải có ít nhất một mục (section).');
             }
 
-            // ==== Insert outline_templates ====
-            $templateId = DB::table('outline_templates')->insertGetId([
-                'faculty_id' => $facultyId,
-                'code' => $meta['code'],
-                'name' => $meta['name'],
-                'description' => $meta['description'] ?? null,
-                'is_default' => $meta['is_default'] ?? 0,
-                'gov_header' => $meta['gov_header'] ?? 'UBND TP. HỒ CHÍ MINH',
-                'university_name' => $meta['university_name'] ?? 'TRƯỜNG ĐH THỦ DẦU MỘT',
-                'national_header' => $meta['national_header'] ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
-                'national_motto' => $meta['national_motto'] ?? 'Độc lập - Tự do - Hạnh phúc',
-                'major_name' => $meta['major_name'] ?? null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            $now      = now();
+            $metaId   = $meta['id'] ?? null;
+            $isUpdate = !empty($metaId);
 
-            // ==== Insert các section ====
+            // ==== Tạo mới hay cập nhật outline_templates ====
+            if ($isUpdate) {
+                // Kiểm tra template có tồn tại và thuộc khoa hiện tại không
+                $existing = DB::table('outline_templates')
+                    ->where('id', $metaId)
+                    ->where('faculty_id', $facultyId)
+                    ->first();
+
+                if (!$existing) {
+                    throw new \Exception('Mẫu đề cương không tồn tại hoặc không thuộc khoa của bạn.');
+                }
+
+                // Update meta
+                DB::table('outline_templates')
+                    ->where('id', $metaId)
+                    ->update([
+                        'code'            => $meta['code'],
+                        'name'            => $meta['name'],
+                        'description'     => $meta['description'] ?? null,
+                        'is_default'      => $meta['is_default'] ?? 0,
+                        'gov_header'      => $meta['gov_header'] ?? 'UBND TP. HỒ CHÍ MINH',
+                        'university_name' => $meta['university_name'] ?? 'TRƯỜNG ĐH THỦ DẦU MỘT',
+                        'national_header' => $meta['national_header'] ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
+                        'national_motto'  => $meta['national_motto'] ?? 'Độc lập - Tự do - Hạnh phúc',
+                        'major_name'      => $meta['major_name'] ?? null,
+                        'updated_at'      => $now,
+                    ]);
+
+                // Xoá toàn bộ section cũ để insert lại
+                DB::table('outline_section_templates')
+                    ->where('outline_template_id', $metaId)
+                    ->delete();
+
+                $templateId = $metaId;
+            } else {
+                // Insert mới
+                $templateId = DB::table('outline_templates')->insertGetId([
+                    'faculty_id'      => $facultyId,
+                    'code'            => $meta['code'],
+                    'name'            => $meta['name'],
+                    'description'     => $meta['description'] ?? null,
+                    'is_default'      => $meta['is_default'] ?? 0,
+                    'gov_header'      => $meta['gov_header'] ?? 'UBND TP. HỒ CHÍ MINH',
+                    'university_name' => $meta['university_name'] ?? 'TRƯỜNG ĐH THỦ DẦU MỘT',
+                    'national_header' => $meta['national_header'] ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
+                    'national_motto'  => $meta['national_motto'] ?? 'Độc lập - Tự do - Hạnh phúc',
+                    'major_name'      => $meta['major_name'] ?? null,
+                    'created_at'      => $now,
+                    'updated_at'      => $now,
+                ]);
+            }
+
+            // (Tuỳ chọn) nếu is_default = 1 thì bỏ default của các mẫu khác trong cùng khoa
+            if (!empty($meta['is_default'])) {
+                DB::table('outline_templates')
+                    ->where('faculty_id', $facultyId)
+                    ->where('id', '!=', $templateId)
+                    ->update([
+                        'is_default' => 0,
+                        'updated_at' => $now,
+                    ]);
+            }
+
+            // ==== Insert các section mới ====
             foreach ($sections as $s) {
                 if (empty($s['code']) || empty($s['title'])) {
                     throw new \Exception('Mỗi section phải có code và title.');
@@ -185,12 +307,12 @@ class OutlineTemplateController extends Controller
 
                 DB::table('outline_section_templates')->insert([
                     'outline_template_id' => $templateId,
-                    'code' => $s['code'],
-                    'title' => $s['title'],
-                    'order_no' => (int)($s['order_no'] ?? 1),
-                    'default_content' => $s['default_content'] ?? '',
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'code'                => $s['code'],
+                    'title'               => $s['title'],
+                    'order_no'            => (int)($s['order_no'] ?? 1),
+                    'default_content'     => $s['default_content'] ?? '',
+                    'created_at'          => $now,
+                    'updated_at'          => $now,
                 ]);
             }
 
@@ -198,10 +320,12 @@ class OutlineTemplateController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Đã lưu mẫu đề cương thành công.',
+                'message' => $isUpdate
+                    ? 'Đã cập nhật mẫu đề cương thành công.'
+                    : 'Đã lưu mẫu đề cương thành công.',
                 'id' => $templateId,
             ]);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
@@ -209,6 +333,9 @@ class OutlineTemplateController extends Controller
             ], 500);
         }
     }
+
+
+
 
     public function destroyMultiple(Request $r)
     {

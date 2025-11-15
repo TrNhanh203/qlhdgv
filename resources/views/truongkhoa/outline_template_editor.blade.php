@@ -57,6 +57,20 @@
             min-height: 60px
         }
 
+        .panel textarea {
+            min-height: 60px;
+        }
+
+
+        .panel .ck-editor {
+            width: 100%;
+        }
+
+        .panel .ck-editor__editable_inline {
+            min-height: 150px;
+            /* muốn cao nữa thì tăng số này */
+        }
+
         .flex {
             display: flex;
             gap: 10px
@@ -188,7 +202,6 @@
     <div class="panel" id="metaPanel">
         <h5>Thông tin mẫu đề cương</h5>
 
-
         <div class="row flex">
             <div class="grow">
                 <label>Mã mẫu (code)</label>
@@ -199,6 +212,9 @@
                 <input type="text" id="tpl_name" placeholder="Đề cương chi tiết - Chuẩn TDMU"
                     value="{{ $template->name ?? '' }}">
             </div>
+
+            <input type="hidden" id="tpl_id" value="{{ $template->id ?? '' }}">
+
             <div style="display:flex;align-items:flex-end;gap:8px">
                 <div>
                     <label>&nbsp;</label><br>
@@ -212,34 +228,36 @@
         </div>
         <div class="row">
             <label>Mô tả (description)</label>
-            <textarea id="tpl_description" placeholder="Ghi chú, phạm vi áp dụng, hướng dẫn chung…"></textarea>
+            {{-- <textarea id="tpl_description" placeholder="Ghi chú, phạm vi áp dụng, hướng dẫn chung…"></textarea> --}}
+
+            <textarea id="tpl_description" placeholder="Ghi chú, phạm vi áp dụng, hướng dẫn chung…">{{ $template->description ?? '' }}</textarea>
+
         </div>
+
     </div>
 
     <div class="page" id="editorPage">
 
         {{-- 🏛️ Khối quốc hiệu --}}
-
-
         <div class="header">
             <div class="left">
                 <div class="line bold" id="gov_header" contenteditable="true">
-                    {{ $template->gov_header ?? 'UBND TP. HỒ CHÍ MINH' }}</div>
+                    {{ $template->gov_header ?? 'UBND TP. HỒ CHÍ MINH sửa động' }}</div>
                 <div class="line bold" contenteditable="true" id="university_name" style="font-size:15px">
                     {{ $template->university_name ?? 'TRƯỜNG ĐẠI HỌC THỦ DẦU MỘT' }}</div>
             </div>
             <div class="right">
                 <div class="line bold" contenteditable="true" id="national_header" style="font-size:15px">
-                    {{ $template->national_header ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM' }}</div>
+                    {{ $template->national_header ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM sửa động ' }}</div>
                 <div class="line italic" contenteditable="true" id="national_motto" style="font-size:15px">
                     {{ $template->national_motto ?? 'Độc lập - Tự do - Hạnh phúc' }}</div>
             </div>
         </div>
 
         <div class="main-title" contenteditable="true" id="main_title">
-            {{ $template->main_title ?? 'ĐỀ CƯƠNG CHI TIẾT HỌC PHẦN' }}</div>
+            {{ $template->main_title ?? 'ĐỀ CƯƠNG CHI TIẾT HỌC PHẦN sửa động' }}</div>
         <div class="major-title" contenteditable="true" id="major_name">
-            {{ $template->major_name ?? 'NGÀNH: KỸ THUẬT PHẦN MỀM' }}</div>
+            {{ $template->major_name ?? 'NGÀNH: KỸ THUẬT PHẦM MỀM sửa động' }}</div>
 
         {{-- 📋 Các mục (section) --}}
         <div id="sectionContainer">
@@ -249,7 +267,7 @@
                         <div class="section-header">
                             <div class="order_no" title="Thứ tự mục"
                                 style="width:42px;text-align:center;font-weight:bold;font-size:13px;
-                                background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
+                                 background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
                                 {{ $s->order_no ?? $i + 1 }}
                             </div>
 
@@ -267,8 +285,10 @@
                             </div>
                         </div>
 
-                        {{-- Giữ nguyên HTML đã lưu (không escape) --}}
-                        <div class="section-content mt-1" contenteditable="true">{!! $s->default_content !!}</div>
+                        {{-- Nội dung section – dùng CKEditor --}}
+                        <div class="section-content mt-1 ck-section-editor" contenteditable="true">
+                            {!! $s->default_content !!}
+                        </div>
                     </div>
                 @empty
                     {{-- Không có section nào trong DB, fallback về 1 section mặc định --}}
@@ -276,7 +296,7 @@
                         <div class="section-header">
                             <div class="order_no" title="Thứ tự mục"
                                 style="width:42px;text-align:center;font-weight:bold;font-size:13px;
-                                background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
+                                 background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
                                 1
                             </div>
                             <input type="text" class="sec-code" placeholder="Mã mục (code) – VD: S01" value="S01">
@@ -289,7 +309,7 @@
                                 <button class="btn-ghost btn-danger-lite btnRemove">🗑</button>
                             </div>
                         </div>
-                        <div class="section-content mt-1" contenteditable="true">
+                        <div class="section-content mt-1 ck-section-editor" contenteditable="true">
                             default content...
                         </div>
                     </div>
@@ -300,7 +320,7 @@
                     <div class="section-header">
                         <div class="order_no" title="Thứ tự mục"
                             style="width:42px;text-align:center;font-weight:bold;font-size:13px;
-                            background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
+                             background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
                             1
                         </div>
                         <input type="text" class="sec-code" placeholder="Mã mục (code) – VD: S01" value="S01">
@@ -313,17 +333,16 @@
                             <button class="btn-ghost btn-danger-lite btnRemove">🗑</button>
                         </div>
                     </div>
-                    <div class="section-content mt-1" contenteditable="true">
+                    <div class="section-content mt-1 ck-section-editor" contenteditable="true">
                         default content...
                     </div>
                 </div>
             @endisset
         </div>
 
-
         <div class="text-center mt-4">
             <button id="addSection" class="btn btn-outline-success">➕ Thêm mục mới</button>
-            <button id="saveDraft" class="btn btn-primary ms-2">💾 Lưu nháp</button>
+            {{-- <button id="saveDraft" class="btn btn-primary ms-2">💾 Lưu nháp</button> --}}
         </div>
     </div>
 
@@ -336,23 +355,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+
+
                     <div class="mb-2">
                         <label class="form-label">Mã mẫu (code)</label>
-                        <input class="form-control" id="m_code" placeholder="CNTT-DC-2025">
+                        <input class="form-control" id="m_code" placeholder="CNTT-DC-2025" readonly>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Tên mẫu (name)</label>
-                        <input class="form-control" id="m_name" placeholder="Đề cương chi tiết - Chuẩn TDMU">
+                        <input class="form-control" id="m_name" placeholder="Đề cương chi tiết - Chuẩn TDMU" readonly>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Mô tả (description)</label>
-                        <textarea class="form-control" id="m_description" rows="3"></textarea>
+                        <textarea class="form-control" id="m_description" rows="3" readonly></textarea>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="m_is_default">
+                        <input class="form-check-input" type="checkbox" id="m_is_default" disabled>
                         <label class="form-check-label" for="m_is_default">Đặt làm mẫu mặc định</label>
                     </div>
-                    <small class="text-muted d-block mt-2">* Các trường quốc hiệu/tiêu đề/ ngành được lấy từ trang soạn
+
+
+                    <small class="text-muted d-block mt-2">* Các trường: quốc hiệu/tiêu đề/ ngành được lấy từ trang soạn
                         thảo ở trên.</small>
                 </div>
                 <div class="modal-footer">
@@ -363,168 +386,260 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('sectionContainer');
-            let isDirty = false;
+    {{-- Scripts riêng cho trang này --}}
+    @push('scripts')
+        {{-- CKEditor --}}
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
-            // Đánh dấu đã chỉnh sửa
-            container.addEventListener('input', () => isDirty = true);
-            document.querySelectorAll('#metaPanel input, #metaPanel textarea').forEach(el => {
-                el.addEventListener('input', () => isDirty = true);
-            });
+        <script>
+            let tplDescEditor = null; // 👈 editor phần mô tả trên panel
 
-            // ⚠️ Cảnh báo trước khi thoát trang
-            window.addEventListener('beforeunload', function(e) {
-                if (!isDirty) return;
-                e.preventDefault();
-                e.returnValue = 'Bạn có thay đổi chưa lưu, rời trang sẽ mất dữ liệu!';
-            });
+            document.addEventListener('DOMContentLoaded', () => {
+                const container = document.getElementById('sectionContainer');
+                const sectionEditors = new Map();
 
-            // ====== Các hàm hỗ trợ ======
-            function resequence() {
-                [...container.querySelectorAll('.section')].forEach((sec, idx) => {
-                    const orderEl = sec.querySelector('.order_no');
-                    if (orderEl) orderEl.textContent = idx + 1;
-                    const titleInput = sec.querySelector('.sec-title');
-                    if (titleInput && /^\d+\.\s/.test(titleInput.value)) {
-                        titleInput.value = `${idx + 1}. ` + titleInput.value.replace(/^\d+\.\s/, '');
-                    }
+                const desc1 = document.getElementById('tpl_description');
+                const desc2 = document.getElementById('m_description');
+
+                // CKEditor cho mô tả
+                // if (desc1) ClassicEditor.create(desc1).catch(console.error);
+
+                if (desc1) {
+                    ClassicEditor.create(desc1)
+                        .then(editor => {
+                            tplDescEditor = editor; // 👈 lưu lại để dùng sau
+                        })
+                        .catch(console.error);
+                }
+                // if (desc2) ClassicEditor.create(desc2).catch(console.error);
+
+                // Khởi tạo CKEditor cho các section hiện có
+                document.querySelectorAll('.ck-section-editor').forEach(el => {
+                    initSectionEditor(el);
                 });
-            }
 
-            function cleanHTML(html) {
-                const tmp = document.createElement('div');
-                tmp.innerHTML = html;
-                const allowed = ['P', 'B', 'I', 'U', 'UL', 'OL', 'LI', 'BR', 'STRONG', 'EM', 'TABLE', 'THEAD',
-                    'TBODY', 'TR', 'TH', 'TD'
-                ];
-                tmp.querySelectorAll('*').forEach(el => {
-                    if (!allowed.includes(el.tagName)) {
-                        if (['SPAN', 'DIV'].includes(el.tagName)) el.replaceWith(...el.childNodes);
-                        else el.remove();
+                let isDirty = false;
+
+                // Đánh dấu đã chỉnh sửa
+                container.addEventListener('input', () => isDirty = true);
+                document.querySelectorAll('#metaPanel input, #metaPanel textarea').forEach(el => {
+                    el.addEventListener('input', () => isDirty = true);
+                });
+
+                // ⚠️ Cảnh báo trước khi thoát trang
+                window.addEventListener('beforeunload', function(e) {
+                    if (!isDirty) return;
+                    e.preventDefault();
+                    e.returnValue = 'Bạn có thay đổi chưa lưu, rời trang sẽ mất dữ liệu!';
+                });
+
+                function initSectionEditor(el) {
+                    if (!el || sectionEditors.has(el)) return;
+                    ClassicEditor
+                        .create(el, {
+                            toolbar: [
+                                'heading', '|',
+                                'bold', 'italic', 'underline', 'link',
+                                '|', 'bulletedList', 'numberedList',
+                                '|', 'insertTable', 'undo', 'redo'
+                            ]
+                        })
+                        .then(editor => {
+                            sectionEditors.set(el, editor);
+                        })
+                        .catch(error => {
+                            console.error('CKEditor init error:', error);
+                        });
+                }
+
+                function destroySectionEditor(el) {
+                    const editor = sectionEditors.get(el);
+                    if (editor) {
+                        editor.destroy().catch(err => console.error(err));
+                        sectionEditors.delete(el);
                     }
-                    [...el.attributes].forEach(attr => {
-                        if (['style', 'class', 'lang'].includes(attr.name) || attr.name.startsWith(
-                                'mso') || /^on/i.test(attr.name)) {
-                            el.removeAttribute(attr.name);
+                }
+
+                function resequence() {
+                    [...container.querySelectorAll('.section')].forEach((sec, idx) => {
+                        const orderEl = sec.querySelector('.order_no');
+                        if (orderEl) orderEl.textContent = idx + 1;
+                        const titleInput = sec.querySelector('.sec-title');
+                        if (titleInput && /^\d+\.\s/.test(titleInput.value)) {
+                            titleInput.value = `${idx + 1}. ` + titleInput.value.replace(/^\d+\.\s/, '');
                         }
                     });
-                });
-                return tmp.innerHTML.trim();
-            }
-
-            // Gom dữ liệu
-            function collectPayload() {
-                const sections = [];
-                container.querySelectorAll('.section').forEach((s, i) => {
-                    const code = s.querySelector('.sec-code')?.value?.trim();
-                    const title = s.querySelector('.sec-title')?.value?.trim();
-                    if (!code || !title) throw new Error(`Section #${i+1} thiếu mã hoặc tiêu đề.`);
-                    sections.push({
-                        code,
-                        title,
-                        order_no: parseInt(s.querySelector('.order_no')?.textContent || (i + 1),
-                            10),
-                        default_content: cleanHTML(s.querySelector('.section-content')?.innerHTML
-                            ?.trim() || '')
-                    });
-                });
-
-                const code = document.getElementById('m_code').value.trim() || document.getElementById('tpl_code')
-                    .value.trim();
-                const name = document.getElementById('m_name').value.trim() || document.getElementById('tpl_name')
-                    .value.trim();
-                if (!code || !name) throw new Error('Vui lòng nhập đầy đủ Mã mẫu và Tên mẫu.');
-
-                return {
-                    template_meta: {
-                        code,
-                        name,
-                        description: document.getElementById('m_description').value.trim() || document
-                            .getElementById('tpl_description').value.trim(),
-                        is_default: document.getElementById('m_is_default').checked || document.getElementById(
-                            'tpl_is_default').checked ? 1 : 0,
-                        gov_header: document.getElementById('gov_header').innerText.trim(),
-                        university_name: document.getElementById('university_name').innerText.trim(),
-                        national_header: document.getElementById('national_header').innerText.trim(),
-                        national_motto: document.getElementById('national_motto').innerText.trim(),
-                        main_title: document.getElementById('main_title').innerText.trim(),
-                        major_name: document.getElementById('major_name').innerText.trim(),
-                    },
-                    sections
-                };
-            }
-
-            // ====== Sự kiện ======
-            document.getElementById('saveDraft').addEventListener('click', () => {
-                console.log("📄 Dữ liệu nháp:", collectPayload());
-                alert("Đang ở dạng nháp (chưa lưu DB). Mở console để xem JSON đầy đủ.");
-            });
-
-            const bsModal = new bootstrap.Modal(document.getElementById('saveModal'));
-            document.getElementById('openSaveModal').addEventListener('click', () => {
-                document.getElementById('m_code').value = document.getElementById('tpl_code').value;
-                document.getElementById('m_name').value = document.getElementById('tpl_name').value;
-                document.getElementById('m_description').value = document.getElementById('tpl_description')
-                    .value;
-                document.getElementById('m_is_default').checked = document.getElementById('tpl_is_default')
-                    .checked;
-                bsModal.show();
-            });
-
-            // ====== Lưu thật ======
-            document.getElementById('confirmSave').addEventListener('click', async () => {
-                try {
-                    const payload = collectPayload();
-                    console.log("🚀 Gửi lưu thật:", payload);
-
-                    const res = await fetch("{{ route('truongkhoa.outline-template.store') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                                .content
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const data = await res.json();
-                    if (!res.ok || !data.success) throw new Error(data.message || 'Không thể lưu mẫu.');
-
-                    isDirty = false;
-                    bsModal.hide();
-                    alert("✅ Lưu thành công! Mã mẫu: " + payload.template_meta.code);
-                } catch (err) {
-                    console.error("❌ Lỗi khi lưu:", err);
-                    alert("Lưu thất bại: " + err.message);
                 }
-            });
-        });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('sectionContainer');
+                function cleanHTML(html) {
+                    const tmp = document.createElement('div');
+                    tmp.innerHTML = html;
+                    const allowed = [
+                        'P', 'B', 'I', 'U', 'UL', 'OL', 'LI', 'BR',
+                        'STRONG', 'EM', 'A',
+                        'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD',
+                        'H1', 'H2', 'H3', 'H4',
+                        'FIGURE', 'CAPTION'
+                    ];
+                    tmp.querySelectorAll('*').forEach(el => {
+                        if (!allowed.includes(el.tagName)) {
+                            if (['SPAN', 'DIV'].includes(el.tagName)) {
+                                el.replaceWith(...el.childNodes);
+                            } else {
+                                el.remove();
+                            }
+                        }
+                        [...el.attributes].forEach(attr => {
+                            if (
+                                ['style', 'class', 'lang'].includes(attr.name) ||
+                                attr.name.startsWith('mso') ||
+                                /^on/i.test(attr.name)
+                            ) {
+                                el.removeAttribute(attr.name);
+                            }
+                        });
+                    });
+                    return tmp.innerHTML.trim();
+                }
+
+                function collectPayload() {
+                    const sections = [];
+                    container.querySelectorAll('.section').forEach((s, i) => {
+                        const code = s.querySelector('.sec-code')?.value?.trim();
+                        const title = s.querySelector('.sec-title')?.value?.trim();
+                        if (!code || !title) throw new Error(`Section #${i+1} thiếu mã hoặc tiêu đề.`);
+
+                        const contentEl = s.querySelector('.section-content');
+                        const editor = sectionEditors.get(contentEl);
+                        const rawHtml = editor ? editor.getData() : (contentEl?.innerHTML?.trim() || '');
+
+                        sections.push({
+                            code,
+                            title,
+                            order_no: parseInt(
+                                s.querySelector('.order_no')?.textContent || (i + 1),
+                                10
+                            ),
+                            default_content: cleanHTML(rawHtml)
+                        });
+                    });
+
+                    const code = document.getElementById('m_code').value.trim() ||
+                        document.getElementById('tpl_code').value.trim();
+                    const name = document.getElementById('m_name').value.trim() ||
+                        document.getElementById('tpl_name').value.trim();
+                    if (!code || !name) throw new Error('Vui lòng nhập đầy đủ Mã mẫu và Tên mẫu.');
+
+                    // 🔹 LẤY ID MẪU TỪ INPUT ẨN
+                    const tplIdEl = document.getElementById('tpl_id');
+                    const tplId = tplIdEl ? tplIdEl.value.trim() : null;
+
+                    let description = '';
+                    if (tplDescEditor) {
+                        description = tplDescEditor.getData().trim(); // lưu HTML đầy đủ
+                    } else {
+                        description = document.getElementById('tpl_description').value.trim();
+                    }
+
+                    return {
+                        template_meta: {
+                            id: tplId || null,
+                            code,
+                            name,
+
+                            description,
+
+                            is_default: document.getElementById('m_is_default').checked ||
+                                document.getElementById('tpl_is_default').checked ? 1 : 0,
+                            gov_header: document.getElementById('gov_header').innerText.trim(),
+                            university_name: document.getElementById('university_name').innerText.trim(),
+                            national_header: document.getElementById('national_header').innerText.trim(),
+                            national_motto: document.getElementById('national_motto').innerText.trim(),
+                            main_title: document.getElementById('main_title').innerText.trim(),
+                            major_name: document.getElementById('major_name').innerText.trim(),
+                        },
+                        sections
+                    };
+                }
+
+                // ====== Sự kiện ======
+                const btnSaveDraft = document.getElementById('saveDraft');
+                if (btnSaveDraft) {
+                    btnSaveDraft.addEventListener('click', () => {
+                        console.log("📄 Dữ liệu nháp:", collectPayload());
+                        alert("Đang ở dạng nháp (chưa lưu DB). Mở console để xem JSON đầy đủ.");
+                    });
+                }
 
 
+                const bsModal = new bootstrap.Modal(document.getElementById('saveModal'));
+                document.getElementById('openSaveModal').addEventListener('click', () => {
+                    document.getElementById('m_code').value = document.getElementById('tpl_code').value;
+                    document.getElementById('m_name').value = document.getElementById('tpl_name').value;
+
+                    // 👉 Lấy nội dung mới nhất từ CKEditor
+                    let descPlain = '';
+                    if (tplDescEditor) {
+                        const html = tplDescEditor.getData(); // nội dung HTML
+                        // Chuyển sang text cho dễ đọc trong textarea modal
+                        const tmp = document.createElement('div');
+                        tmp.innerHTML = html;
+                        descPlain = (tmp.textContent || tmp.innerText || '').trim();
+                    } else {
+                        // fallback nếu CKEditor chưa khởi tạo vì lý do gì đó
+                        descPlain = document.getElementById('tpl_description').value;
+                    }
+                    document.getElementById('m_description').value = descPlain;
 
 
-            // Thêm section mới
-            document.getElementById('addSection').addEventListener('click', () => {
-                const idx = container.children.length + 1;
-                const div = document.createElement('div');
-                div.className = 'section';
-                div.innerHTML = `
+                    document.getElementById('m_is_default').checked = document.getElementById('tpl_is_default')
+                        .checked;
+                    bsModal.show();
+                });
+
+                // Lưu thật
+                document.getElementById('confirmSave').addEventListener('click', async () => {
+                    try {
+                        const payload = collectPayload();
+                        console.log("🚀 Gửi lưu thật:", payload);
+
+                        const res = await fetch("{{ route('truongkhoa.outline-template.store') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                    .content
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const data = await res.json();
+                        if (!res.ok || !data.success) throw new Error(data.message || 'Không thể lưu mẫu.');
+
+                        isDirty = false;
+                        bsModal.hide();
+                        alert("✅ Lưu thành công! Mã mẫu: " + payload.template_meta.code);
+                    } catch (err) {
+                        console.error("❌ Lỗi khi lưu:", err);
+                        alert("Lưu thất bại: " + err.message);
+                    }
+                });
+
+                // Thêm section mới
+                document.getElementById('addSection').addEventListener('click', () => {
+                    const idx = container.children.length + 1;
+                    const div = document.createElement('div');
+                    div.className = 'section';
+                    div.innerHTML = `
       <div class="section-header">
         <div class="order_no" style="width:42px;text-align:center;font-weight:bold;font-size:13px;
          background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
          ${idx}
     </div>
-        <input type="text" class="sec-code" placeholder="Mã mục (code) – VD: S${String(idx).padStart(2,'0')}" value="S${String(idx).padStart(2,'0')}">
+        <input type="text" class="sec-code"
+               placeholder="Mã mục (code) – VD: S${String(idx).padStart(2,'0')}"
+               value="S${String(idx).padStart(2,'0')}">
         <input type="text" class="sec-title" placeholder="Tiêu đề (title)" value="${idx}. Tiêu đề mới">
-        
-       
         <div class="rightActions">
           <button class="btn-ghost btnMoveUp">↑</button>
           <button class="btn-ghost btnMoveDown">↓</button>
@@ -532,72 +647,103 @@
           <button class="btn-ghost btn-danger-lite btnRemove">🗑</button>
         </div>
       </div>
-      <div contenteditable="true" class="section-content mt-1">default content...</div>
+      <div contenteditable="true" class="section-content mt-1 ck-section-editor">default content...</div>
     `;
-                container.appendChild(div);
-                resequence();
-            });
-
-            // Ủy quyền click cho các nút hành động section
-            container.addEventListener('click', (e) => {
-                const btn = e.target.closest('button');
-                if (!btn) return;
-                const sec = e.target.closest('.section');
-                if (!sec) return;
-
-                if (btn.classList.contains('btnRemove')) {
-                    sec.remove();
+                    container.appendChild(div);
                     resequence();
-                }
-                if (btn.classList.contains('btnMoveUp')) {
-                    const prev = sec.previousElementSibling;
-                    if (prev) {
-                        container.insertBefore(sec, prev);
+
+                    const newContentEl = div.querySelector('.ck-section-editor');
+                    initSectionEditor(newContentEl);
+                });
+
+                // Ủy quyền click cho các nút hành động section
+                container.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    const sec = e.target.closest('.section');
+                    if (!sec) return;
+
+                    if (btn.classList.contains('btnRemove')) {
+                        const contentEl = sec.querySelector('.ck-section-editor');
+                        if (contentEl) {
+                            destroySectionEditor(contentEl);
+                        }
+                        sec.remove();
                         resequence();
                     }
-                }
-                if (btn.classList.contains('btnMoveDown')) {
-                    const next = sec.nextElementSibling;
-                    if (next) {
-                        container.insertBefore(next, sec);
-                        resequence();
+                    if (btn.classList.contains('btnMoveUp')) {
+                        const prev = sec.previousElementSibling;
+                        if (prev) {
+                            container.insertBefore(sec, prev);
+                            resequence();
+                        }
                     }
-                }
-                if (btn.classList.contains('btnClone')) {
-                    const clone = sec.cloneNode(true);
-                    container.insertBefore(clone, sec.nextElementSibling);
-                    resequence();
-                }
+                    if (btn.classList.contains('btnMoveDown')) {
+                        const next = sec.nextElementSibling;
+                        if (next) {
+                            container.insertBefore(next, sec);
+                            resequence();
+                        }
+                    }
+                    // if (btn.classList.contains('btnClone')) {
+                    //     const clone = sec.cloneNode(true);
+                    //     container.insertBefore(clone, sec.nextElementSibling);
+                    //     resequence();
+
+                    //     const clonedContentEl = clone.querySelector('.ck-section-editor');
+                    //     if (clonedContentEl) {
+                    //         initSectionEditor(clonedContentEl);
+                    //     }
+                    // }
+
+                    if (btn.classList.contains('btnClone')) {
+                        // Số thứ tự mới (cuối danh sách)
+                        const idx = container.children.length + 1;
+
+                        // Lấy nội dung từ section gốc
+                        const srcContentEl = sec.querySelector('.section-content');
+                        const srcEditor = sectionEditors.get(srcContentEl);
+                        const html = srcEditor ? srcEditor.getData() : (srcContentEl?.innerHTML || '');
+
+                        const srcCode = sec.querySelector('.sec-code')?.value || '';
+                        const srcTitle = sec.querySelector('.sec-title')?.value || '';
+
+                        // Tạo section mới giống với Add Section, nhưng fill code/title/html giống bản gốc
+                        const div = document.createElement('div');
+                        div.className = 'section';
+                        div.innerHTML = `
+      <div class="section-header">
+        <div class="order_no" style="width:42px;text-align:center;font-weight:bold;font-size:13px;
+         background:#f9fafb;border:1px solid #d1d5db;border-radius:6px;padding:4px 0;">
+         ${idx}
+        </div>
+        <input type="text" class="sec-code"
+               placeholder="Mã mục (code)"
+               value="${srcCode}">
+        <input type="text" class="sec-title"
+               placeholder="Tiêu đề (title)"
+               value="${srcTitle}">
+        <div class="rightActions">
+          <button class="btn-ghost btnMoveUp">↑</button>
+          <button class="btn-ghost btnMoveDown">↓</button>
+          <button class="btn-ghost btnClone">⧉</button>
+          <button class="btn-ghost btn-danger-lite btnRemove">🗑</button>
+        </div>
+      </div>
+      <div contenteditable="true" class="section-content mt-1 ck-section-editor">${html}</div>
+    `;
+
+                        // Chèn ngay sau section gốc
+                        container.insertBefore(div, sec.nextElementSibling);
+                        resequence();
+
+                        // Khởi tạo CKEditor cho nội dung section clone
+                        const newContentEl = div.querySelector('.ck-section-editor');
+                        initSectionEditor(newContentEl);
+                    }
+
+                });
             });
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // document.getElementById('confirmSave').addEventListener('click', () => {
-            //     // lấy meta từ modal (ưu tiên modal nếu có)
-            //     const payload = collectPayload();
-            //     payload.template_meta.code = document.getElementById('m_code').value.trim() || payload
-            //         .template_meta.code;
-            //     payload.template_meta.name = document.getElementById('m_name').value.trim() || payload
-            //         .template_meta.name;
-            //     payload.template_meta.description = document.getElementById('m_description').value.trim() ||
-            //         payload.template_meta.description;
-            //     payload.template_meta.is_default = document.getElementById('m_is_default').checked ? 1 :
-            //         payload.template_meta.is_default;
-
-            //     console.log("✅ Payload sẵn sàng để POST lên /outline-templates/store:", payload);
-            //     alert("Đã gom dữ liệu mẫu + các section (xem console).");
-            //     bsModal.hide();
-            // });
-        });
-    </script>
+        </script>
+    @endpush
 @endsection
