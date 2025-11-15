@@ -62,7 +62,9 @@ use App\Http\Controllers\TruongBoMon\QLGiangVienController;
 use App\Http\Controllers\TruongBoMon\QLHocPhanController;
 use App\Http\Controllers\TruongBoMon\DeXuatThiController;
 use App\Http\Controllers\TruongBoMon\DuyetBaoCaoController;
+
 use App\Http\Controllers\GiangVien\DashboardController as GiangVienDashboardController;
+use App\Http\Controllers\GiangVien\GiangVienOutlineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -374,12 +376,33 @@ Route::prefix('truongbomon')
     });
 
 // ====================== GIẢNG VIÊN ======================
+
+
 Route::prefix('giangvien')
     ->middleware(['auth', 'role:giangvien'])
     ->name('giangvien.')
     ->group(function () {
         Route::get('/dashboard', [GiangVienDashboardController::class, 'dashboard'])->name('dashboard');
+
+        // 👇 Nhánh dành cho soạn đề cương
+        Route::prefix('decuong')
+            ->name('outlines.')
+            ->group(function () {
+                // Màn hình soạn đề cương cho 1 phiên bản học phần
+                Route::get('/{courseVersion}', [GiangVienOutlineController::class, 'edit'])
+                    ->name('edit');
+
+                // Lưu đề cương
+                Route::post('/{courseVersion}/save', [GiangVienOutlineController::class, 'save'])
+                    ->name('save');
+
+                // Load template khi GV chọn mẫu
+                Route::get('/{courseVersion}/load-template', [GiangVienOutlineController::class, 'loadTemplate'])
+                    ->name('loadTemplate');
+            });
     });
+
+
 
 
 
