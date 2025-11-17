@@ -67,6 +67,8 @@ use App\Http\Controllers\TruongBoMon\TruongBoMonOutlineAssignmentController;
 
 use App\Http\Controllers\GiangVien\DashboardController as GiangVienDashboardController;
 use App\Http\Controllers\GiangVien\GiangVienOutlineController;
+use App\Http\Controllers\GiangVien\GiangVienCloController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -461,8 +463,39 @@ Route::prefix('giangvien')
                     '/version/{courseVersion}/load-template',
                     [GiangVienOutlineController::class, 'loadTemplate']
                 )->name('loadTemplate');
+
+
+                //  trang tiện ích CLO cho 1 phiên bản đề cương
+                Route::get(
+                    '/version/{courseVersion}/clo',
+                    [GiangVienCloController::class, 'index']
+                )->name('clo.index');
+
+                Route::get(
+                    '/version/{courseVersion}/clo/render',
+                    [GiangVienCloController::class, 'preview']
+                )->name('clo.preview');
+
+                Route::post(
+                    '/version/{courseVersion}/clo/render',
+                    [GiangVienCloController::class, 'renderToSection']
+                )->name('clo.render');
+
+                // ⭐ CRUD CLO (AJAX JSON)
+                Route::post('/version/{courseVersion}/clo', [GiangVienCloController::class, 'store'])
+                    ->name('clo.store');
+
+                Route::get('/version/{courseVersion}/clo/{clo}', [GiangVienCloController::class, 'show'])
+                    ->name('clo.show');
+
+                Route::put('/version/{courseVersion}/clo/{clo}', [GiangVienCloController::class, 'update'])
+                    ->name('clo.update');
+
+                Route::delete('/version/{courseVersion}/clo/{clo}', [GiangVienCloController::class, 'destroy'])
+                    ->name('clo.destroy');
             });
     });
+
 
 
 Route::get('/demo/ctdt_khung_demo_static', function () {

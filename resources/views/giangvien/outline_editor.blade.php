@@ -111,11 +111,105 @@
             bottom: 0;
             border-bottom: 1px solid #000
         }
+
+        /* Floating Action Button + Menu */
+        .fab-container {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+        }
+
+        .fab-main {
+            width: 58px;
+            height: 58px;
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.25s ease;
+        }
+
+        .fab-main.open {
+            transform: rotate(45deg);
+        }
+
+        .fab-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: opacity 0.25s, transform 0.25s;
+        }
+
+        .fab-menu.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .fab-item {
+            background: #fff;
+            color: #000;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .fab-item:hover {
+            background: #f1f1f1;
+        }
     </style>
+    <style>
+        .clo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .clo-table th,
+        .clo-table td {
+            border: 1px solid #333;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .clo-table th {
+            background: #d8e4bc;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .clo-table td:first-child {
+            width: 120px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+
 
     {{-- Panel chọn mẫu + thông tin học phần --}}
     <div class="panel">
         <h5>Soạn đề cương chi tiết</h5>
+
         <div class="row mb-2">
             <div class="col-md-4">
                 <label>Học phần</label>
@@ -190,6 +284,34 @@
             <button id="btnSaveOutline" class="btn btn-primary">💾 Lưu đề cương</button>
         </div>
     </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+        <div class="fab-main" id="fabMain">
+            <i class="bi bi-plus-lg"></i>
+        </div>
+
+        <div class="fab-menu" id="fabMenu">
+
+            <!-- Tiện ích 1 -->
+            <a class="fab-item"
+                href="{{ route('giangvien.outlines.clo.index', ['courseVersion' => $courseVersion->id]) }}">
+                <i class="bi bi-list-check text-primary"></i> Soạn CLO
+            </a>
+
+            <!-- Tiện ích 2 -->
+            <a class="fab-item" href="#">
+                <i class="bi bi-diagram-3 text-success"></i> Mapping CLO – PLO
+            </a>
+
+            <!-- Tiện ích 3 -->
+            <a class="fab-item" href="#">
+                <i class="bi bi-journal-text text-warning"></i> Kế hoạch giảng dạy
+            </a>
+
+        </div>
+    </div>
+
 
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
@@ -437,6 +559,25 @@
                 container.innerHTML =
                     '<div class="text-muted text-center mt-3">Vui lòng chọn mẫu đề cương để bắt đầu soạn.</div>';
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fabMain = document.getElementById('fabMain');
+            const fabMenu = document.getElementById('fabMenu');
+
+            fabMain.addEventListener('click', function() {
+                fabMain.classList.toggle('open');
+                fabMenu.classList.toggle('show');
+            });
+
+            // Đóng menu khi click ra ngoài
+            document.addEventListener('click', function(e) {
+                if (!fabMain.contains(e.target) && !fabMenu.contains(e.target)) {
+                    fabMain.classList.remove('open');
+                    fabMenu.classList.remove('show');
+                }
+            });
         });
     </script>
 @endsection

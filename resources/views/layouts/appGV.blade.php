@@ -244,6 +244,42 @@
             background: #36b9cc;
         }
     </style>
+
+    {{-- Css của bảng clo trong tiện ích tạo clo khi soạn đề cương --}}
+    <style>
+        .clo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .clo-table th,
+        .clo-table td {
+            border: 1px solid #333;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .clo-table th {
+            background: #d8e4bc;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .clo-table td:first-child {
+            width: 120px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .clo-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+
 </head>
 
 <body>
