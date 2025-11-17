@@ -19,7 +19,7 @@
                 <i class="bi bi-chevron-down ms-auto submenu-icon"></i>
             </a>
             <ul class="submenu" id="soanDeCuong">
-                <li><a class="nav-link" href="#">Danh sách đề cương</a></li>
+                <li><a class="nav-link" href="{{ route('giangvien.outlines.index') }}">Danh sách đề cương</a></li>
                 <li><a class="nav-link" href="#">Đề cương được phân công</a></li>
             </ul>
         </li>

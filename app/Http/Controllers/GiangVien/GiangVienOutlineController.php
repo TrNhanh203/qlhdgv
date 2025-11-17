@@ -10,6 +10,97 @@ use Illuminate\Support\Facades\DB;
 
 class GiangVienOutlineController extends Controller
 {
+
+    public function index()
+    {
+        $user = Auth::user();
+        $lectureId = $user->lecture_id;
+
+        if (!$lectureId) abort(403, "Không tìm thấy thông tin giảng viên.");
+
+        // Lấy tất cả phân công soạn đề cương
+        $assignments = DB::table('outline_course_assignments as a')
+            ->join('outline_program_courses as opc', 'a.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+            ->leftJoin('outline_course_versions as ocv', 'a.outline_course_version_id', '=', 'ocv.id')
+            ->where('a.lecture_id', $lectureId)
+            ->select(
+                'a.id as assignment_id',
+                'a.role',
+                'a.due_date',
+                'a.status',
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code',
+
+                'ocv.id as version_id',
+                'ocv.version_no',
+                'ocv.status as version_status'
+            )
+            ->orderBy('c.course_code')
+            ->get();
+
+        return view('giangvien.decuong_index', [
+            'assignments' => $assignments
+        ]);
+    }
+
+    public function createVersion($assignmentId)
+    {
+        $user = Auth::user();
+        $lectureId = $user->lecture_id;
+
+        $assignment = DB::table('outline_course_assignments')
+            ->where('id', $assignmentId)
+            ->where('lecture_id', $lectureId)
+            ->whereNull('outline_course_version_id')
+            ->first();
+
+        if (!$assignment) {
+            return back()->with('error', 'Không thể tạo phiên bản đề cương.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Tạo version mới (V1)
+            $versionId = DB::table('outline_course_versions')->insertGetId([
+                'program_course_id' => $assignment->program_course_id,
+                'version_no'        => 1,
+                'status'            => 'draft',
+                'created_at'        => now(),
+                'updated_at'        => now()
+            ]);
+
+            // Gán tất cả assignment cùng môn vào version này
+            DB::table('outline_course_assignments')
+                ->where('program_course_id', $assignment->program_course_id)
+                ->whereNull('outline_course_version_id')
+                ->update([
+                    'outline_course_version_id' => $versionId,
+                    'updated_at' => now()
+                ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('giangvien.outlines.edit', ['courseVersion' => $versionId])
+                ->with('success', 'Đã tạo phiên bản đề cương.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->with('error', 'Lỗi: ' . $e->getMessage());
+        }
+    }
+
+
+
+
     /**
      * Màn hình soạn đề cương cho 1 phiên bản học phần
      */
@@ -33,10 +124,12 @@ class GiangVienOutlineController extends Controller
         }
 
         // Khoa của giảng viên hiện tại
-        $facultyId = DB::table('lecture_roles')
-            ->where('lecture_id', Auth::user()->lecture_id)
-            ->whereNotNull('faculty_id')
-            ->value('faculty_id');
+        $facultyId = DB::table('lectures as l')
+            ->join('departments as d', 'd.id', '=', 'l.department_id')
+            ->join('faculties as f', 'f.id', '=', 'd.faculty_id')
+            ->where('l.id', Auth::user()->lecture_id)
+            ->value('f.id');
+
 
         // Danh sách mẫu đề cương trong khoa
         $templates = DB::table('outline_templates')
@@ -94,14 +187,14 @@ class GiangVienOutlineController extends Controller
             }
         }
 
-        return view('giangvien.outlines.editor', [
+        return view('giangvien.outline_editor', [
             'courseVersion'     => $courseVersion,
             'templates'         => $templates,
             'currentTemplateId' => $currentTemplateId,
             'templateMeta'      => $templateMeta,
             'sections'          => $sections,
             // nếu bạn có layout riêng cho giảng viên thì sửa lại ở đây
-            'layout'            => 'layouts.apptruongkhoa', // tạm tái dùng layout trưởng khoa
+            'layout'            => 'layouts.appGV',
         ]);
     }
 
@@ -119,10 +212,12 @@ class GiangVienOutlineController extends Controller
         }
 
         // Khoa của giảng viên hiện tại
-        $facultyId = DB::table('lecture_roles')
-            ->where('lecture_id', Auth::user()->lecture_id)
-            ->whereNotNull('faculty_id')
-            ->value('faculty_id');
+        $facultyId = DB::table('lectures as l')
+            ->join('departments as d', 'd.id', '=', 'l.department_id')
+            ->join('faculties as f', 'f.id', '=', 'd.faculty_id')
+            ->where('l.id', Auth::user()->lecture_id)
+            ->value('f.id');
+
 
         $template = DB::table('outline_templates')
             ->where('id', $templateId)

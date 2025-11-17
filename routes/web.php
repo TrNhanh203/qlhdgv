@@ -352,30 +352,7 @@ Route::prefix('truongkhoa')
     });
 
 // ====================== TRƯỞNG BỘ MÔN ======================
-// Route::prefix('truongbomon')
-//     ->middleware(['auth', 'role:truongbomon'])
-//     ->name('truongbomon.')
-//     ->group(function () {
-//         Route::get('/dashboard', [TruongBoMonDashboardController::class, 'dashboard'])->name('dashboard');
-//         Route::get('/quanlygiangvien/dsgiangvien', [QLGiangVienController::class, 'dsgiangvien'])->name('quanlygiangvien.dsgiangvien');
-//         Route::get('/quanlygiangvien/phanconggiangday', [QLGiangVienController::class, 'phanconggiangday'])->name('quanlygiangvien.phanconggiangday');
-//         Route::get('/quanlygiangvien/theodoitiendo', [QLGiangVienController::class, 'theodoitiendo'])->name('quanlygiangvien.theodoitiendo');
 
-//         Route::get('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
-//         Route::post('/quanlyhocphan/dshocphan', [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
-
-//         // === HỌC PHẦN (courses) cho Trưởng bộ môn ===
-//         Route::get('/quanlyhocphan/dshocphan',        [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
-//         Route::post('/quanlyhocphan/dshocphan',        [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
-//         Route::post('/quanlyhocphan/delete-multiple',  [QLHocPhanController::class, 'destroyMultiple'])->name('quanlyhocphan.destroyMultiple');
-
-
-//         Route::get('/dexuathi/dexuatlichthi', [DeXuatThiController::class, 'dexuatlichthi'])->name('dexuathi.dexuatlichthi');
-//         Route::get('/dexuathi/dexuatdethi', [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');
-//         Route::get('/duyetbaocao/hopchuyenmon', [DuyetBaoCaoController::class, 'hopchuyenmon'])->name('duyetbaocao.hopchuyenmon');
-//         Route::get('/duyetbaocao/klcongviec', [DuyetBaoCaoController::class, 'klcongviec'])->name('duyetbaocao.klcongviec');
-//         Route::get('/duyetbaocao/bcketthuchocphan', [DuyetBaoCaoController::class, 'bcketthuchocphan'])->name('duyetbaocao.bcketthuchocphan');
-//     });
 Route::prefix('truongbomon')
     ->middleware(['auth', 'role:truongbomon'])
     ->name('truongbomon.')
@@ -453,33 +430,40 @@ Route::prefix('giangvien')
     ->middleware(['auth', 'role:giangvien'])
     ->name('giangvien.')
     ->group(function () {
-        Route::get('/dashboard', [GiangVienDashboardController::class, 'dashboard'])->name('dashboard');
 
-        // 👇 Nhánh dành cho soạn đề cương
+        Route::get('/dashboard', [GiangVienDashboardController::class, 'dashboard'])
+            ->name('dashboard');
+
         Route::prefix('decuong')
-            ->name('outlines.')
+            ->name('outlines.')  // vẫn giữ nếu bạn muốn
             ->group(function () {
-                // Màn hình soạn đề cương cho 1 phiên bản học phần
-                Route::get('/{courseVersion}', [GiangVienOutlineController::class, 'edit'])
-                    ->name('edit');
 
-                // Lưu đề cương
-                Route::post('/{courseVersion}/save', [GiangVienOutlineController::class, 'save'])
-                    ->name('save');
+                Route::get('/', [GiangVienOutlineController::class, 'index'])
+                    ->name('index');
 
-                // Load template khi GV chọn mẫu
-                Route::get('/{courseVersion}/load-template', [GiangVienOutlineController::class, 'loadTemplate'])
-                    ->name('loadTemplate');
+                Route::post(
+                    '/assignment/{assignment}/create-version',
+                    [GiangVienOutlineController::class, 'createVersion']
+                )->name('createVersion');
+
+
+                Route::get(
+                    '/version/{courseVersion}',
+                    [GiangVienOutlineController::class, 'edit']
+                )->name('edit');
+
+                Route::post(
+                    '/version/{courseVersion}/save',
+                    [GiangVienOutlineController::class, 'save']
+                )->name('save');
+
+                Route::get(
+                    '/version/{courseVersion}/load-template',
+                    [GiangVienOutlineController::class, 'loadTemplate']
+                )->name('loadTemplate');
             });
     });
 
-
-
-
-
-Route::get('/demo/plo-pi', function () {
-    return view('demo.plo-pi');
-});
 
 Route::get('/demo/ctdt_khung_demo_static', function () {
     return view('demo.ctdt_khung_demo_static');

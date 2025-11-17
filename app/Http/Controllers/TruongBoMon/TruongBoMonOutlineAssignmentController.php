@@ -509,11 +509,4 @@ class TruongBoMonOutlineAssignmentController extends Controller
             ], 500);
         }
     }
-
-
-    public function copyFromPrevious(Request $request)
-    {
-        // Tạm thời chỉ báo chưa làm, sau mình sẽ build logic tìm khóa trước + đề cương cũ
-        return back()->with('info', 'Chức năng copy từ khóa trước sẽ được hoàn thiện sau.');
-    }
 }
