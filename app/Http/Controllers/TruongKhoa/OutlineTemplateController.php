@@ -139,77 +139,10 @@ class OutlineTemplateController extends Controller
      *   "sections": [{code,title,order_no,default_content}]
      * }
      */
-    // public function store(Request $r)
-    // {
-    //     DB::beginTransaction();
 
-    //     try {
-    //         // Faculty hiện tại
-    //         $facultyId = DB::table('lecture_roles')
-    //             ->where('lecture_id', Auth::user()->lecture_id)
-    //             ->whereNotNull('faculty_id')
-    //             ->value('faculty_id');
 
-    //         $meta = $r->input('template_meta', []);
-    //         $sections = $r->input('sections', []);
 
-    //         // ==== Validate thủ công ====
-    //         if (empty($meta['code']) || empty($meta['name'])) {
-    //             throw new \Exception('Thiếu Mã mẫu hoặc Tên mẫu.');
-    //         }
-    //         if (empty($sections)) {
-    //             throw new \Exception('Mẫu đề cương phải có ít nhất một mục (section).');
-    //         }
-
-    //         // ==== Insert outline_templates ====
-    //         $templateId = DB::table('outline_templates')->insertGetId([
-    //             'faculty_id' => $facultyId,
-    //             'code' => $meta['code'],
-    //             'name' => $meta['name'],
-    //             'description' => $meta['description'] ?? null,
-    //             'is_default' => $meta['is_default'] ?? 0,
-    //             'gov_header' => $meta['gov_header'] ?? 'UBND TP. HỒ CHÍ MINH',
-    //             'university_name' => $meta['university_name'] ?? 'TRƯỜNG ĐH THỦ DẦU MỘT',
-    //             'national_header' => $meta['national_header'] ?? 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
-    //             'national_motto' => $meta['national_motto'] ?? 'Độc lập - Tự do - Hạnh phúc',
-    //             'major_name' => $meta['major_name'] ?? null,
-    //             'created_at' => now(),
-    //             'updated_at' => now(),
-    //         ]);
-
-    //         // ==== Insert các section ====
-    //         foreach ($sections as $s) {
-    //             if (empty($s['code']) || empty($s['title'])) {
-    //                 throw new \Exception('Mỗi section phải có code và title.');
-    //             }
-
-    //             DB::table('outline_section_templates')->insert([
-    //                 'outline_template_id' => $templateId,
-    //                 'code' => $s['code'],
-    //                 'title' => $s['title'],
-    //                 'order_no' => (int)($s['order_no'] ?? 1),
-    //                 'default_content' => $s['default_content'] ?? '',
-    //                 'created_at' => now(),
-    //                 'updated_at' => now(),
-    //             ]);
-    //         }
-
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Đã lưu mẫu đề cương thành công.',
-    //             'id' => $templateId,
-    //         ]);
-    //     } catch (Throwable $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
+    //hàm store mới cho phép xóa sửa và thêm các section vào mẫu đề cương đã có đề cương áp dụng
     public function store(Request $r)
     {
         DB::beginTransaction();
@@ -239,12 +172,12 @@ class OutlineTemplateController extends Controller
             // ==== Tạo mới hay cập nhật outline_templates ====
             if ($isUpdate) {
                 // Kiểm tra template có tồn tại và thuộc khoa hiện tại không
-                $existing = DB::table('outline_templates')
+                $existingTemplate = DB::table('outline_templates')
                     ->where('id', $metaId)
                     ->where('faculty_id', $facultyId)
                     ->first();
 
-                if (!$existing) {
+                if (!$existingTemplate) {
                     throw new \Exception('Mẫu đề cương không tồn tại hoặc không thuộc khoa của bạn.');
                 }
 
@@ -263,11 +196,6 @@ class OutlineTemplateController extends Controller
                         'major_name'      => $meta['major_name'] ?? null,
                         'updated_at'      => $now,
                     ]);
-
-                // Xoá toàn bộ section cũ để insert lại
-                DB::table('outline_section_templates')
-                    ->where('outline_template_id', $metaId)
-                    ->delete();
 
                 $templateId = $metaId;
             } else {
@@ -299,21 +227,70 @@ class OutlineTemplateController extends Controller
                     ]);
             }
 
-            // ==== Insert các section mới ====
+            // ====== XỬ LÝ SECTION (KHÔNG XÓA HẾT NỮA) ======
+            // Lấy danh sách section hiện có của template (key theo code)
+            $existingSections = DB::table('outline_section_templates')
+                ->where('outline_template_id', $templateId)
+                ->get()
+                ->keyBy('code'); // giả định code là unique trong 1 template
+
+            $submittedCodes = [];
+
             foreach ($sections as $s) {
                 if (empty($s['code']) || empty($s['title'])) {
                     throw new \Exception('Mỗi section phải có code và title.');
                 }
 
-                DB::table('outline_section_templates')->insert([
-                    'outline_template_id' => $templateId,
-                    'code'                => $s['code'],
-                    'title'               => $s['title'],
-                    'order_no'            => (int)($s['order_no'] ?? 1),
-                    'default_content'     => $s['default_content'] ?? '',
-                    'created_at'          => $now,
-                    'updated_at'          => $now,
-                ]);
+                $code     = $s['code'];
+                $title    = $s['title'];
+                $orderNo  = (int)($s['order_no'] ?? 1);
+                $content  = $s['default_content'] ?? '';
+
+                $submittedCodes[] = $code;
+
+                if (isset($existingSections[$code])) {
+                    // Section đã tồn tại -> UPDATE
+                    DB::table('outline_section_templates')
+                        ->where('id', $existingSections[$code]->id)
+                        ->update([
+                            'title'           => $title,
+                            'order_no'        => $orderNo,
+                            'default_content' => $content,
+                            'updated_at'      => $now,
+                        ]);
+                } else {
+                    // Section mới -> INSERT
+                    DB::table('outline_section_templates')->insert([
+                        'outline_template_id' => $templateId,
+                        'code'                => $code,
+                        'title'               => $title,
+                        'order_no'            => $orderNo,
+                        'default_content'     => $content,
+                        'created_at'          => $now,
+                        'updated_at'          => $now,
+                    ]);
+                }
+            }
+
+            // (Optional) XÓA NHỮNG SECTION CŨ KHÔNG CÒN TRONG FORM
+            // Nếu bạn muốn cho phép "xóa" section, nhưng phải check chưa được dùng
+            $codesToDelete = $existingSections->keys()->diff($submittedCodes);
+
+            foreach ($codesToDelete as $codeToDelete) {
+                $section = $existingSections[$codeToDelete];
+
+                // Kiểm tra xem section này đã được dùng trong outline_section_contents chưa
+                $usedCount = DB::table('outline_section_contents')
+                    ->where('section_template_id', $section->id)
+                    ->count();
+
+                if ($usedCount == 0) {
+                    // Chưa dùng => xóa an toàn
+                    DB::table('outline_section_templates')
+                        ->where('id', $section->id)
+                        ->delete();
+                }
+                // Nếu đã dùng => giữ lại, không xóa (có thể sau này thêm cột is_active để ẩn)
             }
 
             DB::commit();
@@ -332,6 +309,44 @@ class OutlineTemplateController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+
+    public function canDeleteSection($sectionId)
+    {
+        // Kiểm tra section có tồn tại không
+        $section = DB::table('outline_section_templates')
+            ->where('id', $sectionId)
+            ->first();
+
+        if (!$section) {
+            return response()->json([
+                'success'    => false,
+                'canDelete'  => false,
+                'message'    => 'Không tìm thấy section.',
+            ], 404);
+        }
+
+        // Đếm xem có đề cương nào đang dùng section này không
+        $usedCount = DB::table('outline_section_contents')
+            ->where('section_template_id', $sectionId)
+            ->count();
+
+        if ($usedCount > 0) {
+            return response()->json([
+                'success'    => true,
+                'canDelete'  => false,
+                'usedCount'  => $usedCount,
+                'message'    => 'Mục này đã được sử dụng trong ' . $usedCount . ' đề cương, không thể xóa.',
+            ]);
+        }
+
+        return response()->json([
+            'success'    => true,
+            'canDelete'  => true,
+            'usedCount'  => 0,
+            'message'    => 'Có thể xóa mục này.',
+        ]);
     }
 
 

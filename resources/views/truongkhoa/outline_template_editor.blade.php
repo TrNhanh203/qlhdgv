@@ -391,6 +391,9 @@
         {{-- CKEditor --}}
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
+        {{-- SweetAlert2 --}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <script>
             let tplDescEditor = null; // 👈 editor phần mô tả trên panel
 
@@ -398,12 +401,71 @@
                 const container = document.getElementById('sectionContainer');
                 const sectionEditors = new Map();
 
+                const canDeleteUrlTemplate = @json(route('truongkhoa.outline-template.sections.canDelete', ['sectionId' => '__SECTION_ID__']));
+
+
+
                 const desc1 = document.getElementById('tpl_description');
                 const desc2 = document.getElementById('m_description');
 
+
+                // ==== Helper SweetAlert ====
+                function showSuccess(message) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: message,
+                    });
+                }
+
+                function showError(message) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: message,
+                    });
+                }
+
+                function showWarning(message) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo',
+                        text: message,
+                    });
+                }
+
+                function showConfirm(title, text) {
+                    return Swal.fire({
+                        icon: 'question',
+                        title: title,
+                        text: text || '',
+                        showCancelButton: true,
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy'
+                    });
+                }
+
+
+                async function checkCanDeleteSection(sectionId) {
+                    const url = canDeleteUrlTemplate.replace('__SECTION_ID__', sectionId);
+
+                    const res = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok) {
+                        throw new Error(data.message || 'Không thể kiểm tra section.');
+                    }
+                    return data; // {success, canDelete, message, usedCount}
+                }
+
+
                 // CKEditor cho mô tả
                 // if (desc1) ClassicEditor.create(desc1).catch(console.error);
-
                 if (desc1) {
                     ClassicEditor.create(desc1)
                         .then(editor => {
@@ -618,12 +680,14 @@
 
                         isDirty = false;
                         bsModal.hide();
-                        alert("✅ Lưu thành công! Mã mẫu: " + payload.template_meta.code);
+
+                        showSuccess("Lưu thành công! Mã mẫu: " + payload.template_meta.code);
                     } catch (err) {
                         console.error("❌ Lỗi khi lưu:", err);
-                        alert("Lưu thất bại: " + err.message);
+                        showError("Lưu thất bại: " + err.message);
                     }
                 });
+
 
                 // Thêm section mới
                 document.getElementById('addSection').addEventListener('click', () => {
@@ -663,14 +727,70 @@
                     const sec = e.target.closest('.section');
                     if (!sec) return;
 
+
                     if (btn.classList.contains('btnRemove')) {
-                        const contentEl = sec.querySelector('.ck-section-editor');
-                        if (contentEl) {
-                            destroySectionEditor(contentEl);
+                        const sectionId = sec.dataset.id; // data-id từ div.section
+
+                        // 👉 Nếu section mới (chưa có id trong DB) → confirm rồi xóa
+                        if (!sectionId || isNaN(parseInt(sectionId))) {
+                            showConfirm('Xóa mục này?', 'Mục này chưa lưu vào hệ thống, sẽ bị xóa khỏi mẫu.')
+                                .then(result => {
+                                    if (result.isConfirmed) {
+                                        const contentEl = sec.querySelector('.ck-section-editor');
+                                        if (contentEl) {
+                                            destroySectionEditor(contentEl);
+                                        }
+                                        sec.remove();
+                                        resequence();
+                                    }
+                                });
+                            return;
                         }
-                        sec.remove();
-                        resequence();
+
+                        // 👉 Section đã có trong DB → gọi API kiểm tra
+                        const url = canDeleteUrlTemplate.replace('__SECTION_ID__', sectionId);
+
+                        fetch(url, {
+                                method: 'GET',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (!data.success) {
+                                    showError(data.message || 'Không thể kiểm tra mục này.');
+                                    return;
+                                }
+
+                                if (!data.canDelete) {
+                                    // Đã có outline sử dụng
+                                    showWarning(data.message || 'Mục này đã được sử dụng, không thể xóa.');
+                                    return;
+                                }
+
+                                // Cho phép xóa
+                                showConfirm('Xóa mục này?',
+                                        'Mục này chưa được đề cương nào sử dụng, bạn có chắc chắn muốn xóa?'
+                                    )
+                                    .then(result => {
+                                        if (result.isConfirmed) {
+                                            const contentEl = sec.querySelector('.ck-section-editor');
+                                            if (contentEl) {
+                                                destroySectionEditor(contentEl);
+                                            }
+                                            sec.remove();
+                                            resequence();
+                                        }
+                                    });
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                showError('Lỗi khi kiểm tra section. Vui lòng thử lại.');
+                            });
                     }
+
+
                     if (btn.classList.contains('btnMoveUp')) {
                         const prev = sec.previousElementSibling;
                         if (prev) {

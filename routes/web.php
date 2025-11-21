@@ -336,6 +336,12 @@ Route::prefix('truongkhoa')
                 Route::get('/editor', [OutlineTemplateController::class, 'editor'])->name('editor');
 
                 Route::get('/edit/{id}', [OutlineTemplateController::class, 'edit'])->name('edit');
+
+
+                Route::get(
+                    '/sections/{sectionId}/can-delete',
+                    [OutlineTemplateController::class, 'canDeleteSection']
+                )->name('sections.canDelete');
             });
 
 
@@ -353,76 +359,88 @@ Route::prefix('truongkhoa')
         Route::get('/baocaothongke/baocao', [BaoCaoController::class, 'baocao'])->name('baocaothongke.baocao');
     });
 
+
 // ====================== TRƯỞNG BỘ MÔN ======================
 
 Route::prefix('truongbomon')
     ->middleware(['auth', 'role:truongbomon'])
     ->name('truongbomon.')
     ->group(function () {
-        Route::get('/dashboard', [TruongBoMonDashboardController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/quanlygiangvien/dsgiangvien',        [QLGiangVienController::class, 'dsgiangvien'])->name('quanlygiangvien.dsgiangvien');
-        Route::get('/quanlygiangvien/phanconggiangday',  [QLGiangVienController::class, 'phanconggiangday'])->name('quanlygiangvien.phanconggiangday');
-        Route::get('/quanlygiangvien/theodoitiendo',     [QLGiangVienController::class, 'theodoitiendo'])->name('quanlygiangvien.theodoitiendo');
+        Route::get('/dashboard', [TruongBoMonDashboardController::class, 'dashboard'])
+            ->name('dashboard');
 
-        // === HỌC PHẦN (courses) cho Trưởng bộ môn ===
-        Route::get('/quanlyhocphan/dshocphan',           [QLHocPhanController::class, 'dshocphan'])->name('quanlyhocphan.dshocphan');
-        Route::post('/quanlyhocphan/dshocphan',          [QLHocPhanController::class, 'store'])->name('quanlyhocphan.store');
-        Route::post('/quanlyhocphan/delete-multiple',    [QLHocPhanController::class, 'destroyMultiple'])->name('quanlyhocphan.destroyMultiple');
-
-        // === PHÂN CÔNG SOẠN ĐỀ CƯƠNG (TBM) ===
-        Route::prefix('/quanlyhocphan/phancongdecuong')
-            ->name('quanlyhocphan.phancongdecuong.')
+        // === QUẢN LÝ GIẢNG VIÊN ===
+        Route::prefix('quanlygiangvien')
+            ->name('quanlygiangvien.')
             ->group(function () {
-
-                // Trang chính: chọn CTĐT + học phần → hiển thị danh sách outline versions hoặc 2 nút hành động
-                Route::get(
-                    '/',
-                    [TruongBoMonOutlineAssignmentController::class, 'index']
-                )->name('index');
-
-                // Phân công theo phiên bản đề cương đã có (V1, V2…)
-                Route::get(
-                    '/{outlineCourseVersion}/edit',
-                    [TruongBoMonOutlineAssignmentController::class, 'edit']
-                )->name('edit');
-
-                Route::post(
-                    '/{outlineCourseVersion}/save',
-                    [TruongBoMonOutlineAssignmentController::class, 'save']
-                )->name('save');
-
-                // 🔥 Phân công soạn mới (chưa có version nào)
-                Route::get(
-                    '/assign-new',
-                    [TruongBoMonOutlineAssignmentController::class, 'assignNew']
-                )->name('assignNew');
-
-                Route::post(
-                    '/assign-new/{programCourseId}/save',
-                    [TruongBoMonOutlineAssignmentController::class, 'saveNew']
-                )->name('saveNew');
+                Route::get('/dsgiangvien',       [QLGiangVienController::class, 'dsgiangvien'])->name('dsgiangvien');
+                Route::get('/phanconggiangday', [QLGiangVienController::class, 'phanconggiangday'])->name('phanconggiangday');
+                Route::get('/theodoitiendo',    [QLGiangVienController::class, 'theodoitiendo'])->name('theodoitiendo');
             });
 
+        // === QUẢN LÝ HỌC PHẦN (courses) ===
+        Route::prefix('quanlyhocphan')
+            ->name('quanlyhocphan.')
+            ->group(function () {
+
+                Route::get('/dshocphan',        [QLHocPhanController::class, 'dshocphan'])->name('dshocphan');
+                Route::post('/dshocphan',       [QLHocPhanController::class, 'store'])->name('store');
+                Route::post('/delete-multiple', [QLHocPhanController::class, 'destroyMultiple'])->name('destroyMultiple');
+
+                // === PHÂN CÔNG SOẠN ĐỀ CƯƠNG (TBM) ===
+                Route::prefix('phancongdecuong')
+                    ->name('phancongdecuong.')
+                    ->group(function () {
+
+                        // Trang chính: chọn CTĐT + học phần
+                        Route::get(
+                            '/',
+                            [TruongBoMonOutlineAssignmentController::class, 'index']
+                        )->name('index');
+
+                        // Phân công theo phiên bản đề cương đã có (V1, V2…)
+                        Route::get(
+                            '/{outlineCourseVersion}/edit',
+                            [TruongBoMonOutlineAssignmentController::class, 'edit']
+                        )->name('edit');
+
+                        Route::post(
+                            '/{outlineCourseVersion}/save',
+                            [TruongBoMonOutlineAssignmentController::class, 'save']
+                        )->name('save');
+
+                        // 🔥 Phân công soạn mới (chưa có version nào)
+                        Route::get(
+                            '/assign-new',
+                            [TruongBoMonOutlineAssignmentController::class, 'assignNew']
+                        )->name('assignNew');
+
+                        Route::post(
+                            '/assign-new/{programCourseId}/save',
+                            [TruongBoMonOutlineAssignmentController::class, 'saveNew']
+                        )->name('saveNew');
+                    });
+            });
+
+        // === CÁC ROUTE KHÁC ===
+        Route::get('/dexuathi/dexuatlichthi', [DeXuatThiController::class, 'dexuatlichthi'])->name('dexuathi.dexuatlichthi');
+        Route::get('/dexuathi/dexuatdethi',   [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');
+
+        Route::get('/duyetbaocao/hopchuyenmon',     [DuyetBaoCaoController::class, 'hopchuyenmon'])->name('duyetbaocao.hopchuyenmon');
+        Route::get('/duyetbaocao/klcongviec',       [DuyetBaoCaoController::class, 'klcongviec'])->name('duyetbaocao.klcongviec');
+        Route::get('/duyetbaocao/bcketthuchocphan', [DuyetBaoCaoController::class, 'bcketthuchocphan'])->name('duyetbaocao.bcketthuchocphan');
 
 
-        // === PHÂN CÔNG SOẠN ĐỀ CƯƠNG cho giảng viên ===
-        Route::get('/quanlyhocphan/phancongdecuong', [TruongBoMonOutlineAssignmentController::class, 'index'])
-            ->name('quanlyhocphan.phancongdecuong.index');
-
-        Route::get('/quanlyhocphan/phancongdecuong/{outlineCourseVersion}', [TruongBoMonOutlineAssignmentController::class, 'edit'])
-            ->name('quanlyhocphan.phancongdecuong.edit');
-
-        Route::post('/quanlyhocphan/phancongdecuong/{outlineCourseVersion}', [TruongBoMonOutlineAssignmentController::class, 'save'])
-            ->name('quanlyhocphan.phancongdecuong.save');
-
-        Route::get('/dexuathi/dexuatlichthi',            [DeXuatThiController::class, 'dexuatlichthi'])->name('dexuathi.dexuatlichthi');
-        Route::get('/dexuathi/dexuatdethi',              [DeXuatThiController::class, 'dexuatdethi'])->name('dexuathi.dexuatdethi');
-
-        Route::get('/duyetbaocao/hopchuyenmon',          [DuyetBaoCaoController::class, 'hopchuyenmon'])->name('duyetbaocao.hopchuyenmon');
-        Route::get('/duyetbaocao/klcongviec',            [DuyetBaoCaoController::class, 'klcongviec'])->name('duyetbaocao.klcongviec');
-        Route::get('/duyetbaocao/bcketthuchocphan',      [DuyetBaoCaoController::class, 'bcketthuchocphan'])->name('duyetbaocao.bcketthuchocphan');
+        // ✅ ALIAS để tránh lỗi RouteNotFoundException: truongbomon.decuong.assign.index
+        // Nếu đâu đó còn redirect()->route('truongbomon.decuong.assign.index')
+        // thì tạm cho nó trỏ về trang phân công đề cương chính
+        Route::get(
+            '/decuong/assign',
+            [TruongBoMonOutlineAssignmentController::class, 'index']
+        )->name('decuong.assign.index');
     });
+
 
 
 // ====================== GIẢNG VIÊN ======================
@@ -463,6 +481,26 @@ Route::prefix('giangvien')
                     '/version/{courseVersion}/load-template',
                     [GiangVienOutlineController::class, 'loadTemplate']
                 )->name('loadTemplate');
+
+                // ============= TIỆN ÍCH NHÂN BẢN ĐỀ CƯƠNG =============
+                // Trang chọn bản đề cương nguồn để nhân bản
+                Route::get(
+                    '/assignment/{assignment}/clone',
+                    [GiangVienOutlineController::class, 'cloneSelect']
+                )->name('clone.select');
+
+                // Preview nội dung một version nguồn (AJAX / page fragment)
+                Route::get(
+                    '/clone/source/{sourceVersion}/preview',
+                    [GiangVienOutlineController::class, 'clonePreview']
+                )->name('clone.preview');
+
+                // Thực hiện nhân bản từ sourceVersion sang assignment hiện tại
+                Route::post(
+                    '/assignment/{assignment}/clone-from/{sourceVersion}',
+                    [GiangVienOutlineController::class, 'clonePerform']
+                )->name('clone.perform');
+                // ======================================================
 
 
                 //  trang tiện ích CLO cho 1 phiên bản đề cương

@@ -294,10 +294,14 @@
         <div class="fab-menu" id="fabMenu">
 
             <!-- Tiện ích 1 -->
-            <a class="fab-item"
+            {{-- <a class="fab-item"
                 href="{{ route('giangvien.outlines.clo.index', ['courseVersion' => $courseVersion->id]) }}">
                 <i class="bi bi-list-check text-primary"></i> Soạn CLO
+            </a> --}}
+            <a class="fab-item" href="javascript:void(0)" id="fabCloBuilder">
+                <i class="bi bi-list-check text-primary"></i> Soạn CLO
             </a>
+
 
             <!-- Tiện ích 2 -->
             <a class="fab-item" href="#">
@@ -305,8 +309,16 @@
             </a>
 
             <!-- Tiện ích 3 -->
-            <a class="fab-item" href="#">
+            {{-- <a class="fab-item" href="#">
                 <i class="bi bi-journal-text text-warning"></i> Kế hoạch giảng dạy
+            </a> --}}
+
+            <!-- Tiện ích 4 -->
+            {{-- <a class="fab-item" href="{{ route('giangvien.outlines.clone.select', ['assignment' => $assignment->id]) }}"> --}}
+            <a class="fab-item" href="#">
+
+                <i class="bi bi-files text-warning"></i>
+                Nhân bản nhanh
             </a>
 
         </div>
@@ -316,6 +328,9 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
+        let hasUnsavedChanges = false;
+
+
         document.addEventListener('DOMContentLoaded', () => {
             const courseVersionId = {{ $courseVersion->id }};
             const initialTemplateId = @json($currentTemplateId);
@@ -543,6 +558,9 @@
                     }
 
                     alert('✅ ' + (data.message || 'Đã lưu đề cương thành công.'));
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
                 } catch (err) {
                     console.error(err);
                     alert('Lưu thất bại: ' + err.message);
@@ -560,7 +578,38 @@
                     '<div class="text-muted text-center mt-3">Vui lòng chọn mẫu đề cương để bắt đầu soạn.</div>';
             }
         });
+
+
+        // KIỂM TRA CÓ TEMPLATE + CÓ SECTION
+        function canUseUtilities() {
+            const hasTemplate = {{ $currentTemplateId ? 'true' : 'false' }};
+            const hasSections = {{ count($sections) > 0 ? 'true' : 'false' }};
+
+            if (!hasTemplate) {
+                alert("⚠️ Bạn chưa chọn mẫu đề cương.\nVui lòng chọn mẫu đề cương và nhấn 'Lưu' trước khi dùng tiện ích.");
+                return false;
+            }
+
+            if (!hasSections) {
+                alert("⚠️ Bạn chưa lưu đề cương.\nVui lòng nhấn 'Lưu đề cương' ít nhất 1 lần để tạo danh sách mục.");
+                return false;
+            }
+
+            return true;
+        }
+
+
+        // Nút mở tiện ích CLO Builder
+        document.getElementById("fabCloBuilder")?.addEventListener("click", function() {
+            if (!canUseUtilities()) return;
+
+            window.location.href =
+                "{{ route('giangvien.outlines.clo.index', ['courseVersion' => $courseVersion->id]) }}";
+        });
     </script>
+
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const fabMain = document.getElementById('fabMain');
