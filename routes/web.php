@@ -444,8 +444,6 @@ Route::prefix('truongbomon')
 
 
 // ====================== GIẢNG VIÊN ======================
-
-
 Route::prefix('giangvien')
     ->middleware(['auth', 'role:giangvien'])
     ->name('giangvien.')

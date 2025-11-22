@@ -11,6 +11,152 @@ use Illuminate\Support\Facades\DB;
 class GiangVienOutlineController extends Controller
 {
 
+    public function cloneSelect($assignmentId)
+    {
+        $user = Auth::user();
+        $lectureId = $user->lecture_id;
+
+        // 1. Lấy assignment hiện tại của GV (đích clone đến) + thông tin CTĐT, khóa, năm học, học kỳ
+        $assignment = DB::table('outline_course_assignments as a')
+            ->join('outline_program_courses as opc', 'a.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+
+            // ✅ Năm học + học kỳ lấy từ outline_program_courses, không phải từ courses
+            ->leftJoin('semesters as s', 'opc.semester_id', '=', 's.id')
+            ->leftJoin('academic_years as ay', 'opc.academic_year_id', '=', 'ay.id')
+
+            ->where('a.id', $assignmentId)
+            ->where('a.lecture_id', $lectureId)
+            ->select(
+                'a.id',
+                'a.program_course_id',
+                'a.outline_course_version_id',
+                'a.role',
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code',
+
+                // 👇 Thông tin năm học & học kỳ của assignment hiện tại
+                'ay.year_code as academic_year_code',
+                's.semester_name'
+            )
+            ->first();
+
+        if (!$assignment) {
+            abort(404, 'Không tìm thấy phân công đề cương phù hợp.');
+        }
+
+        // 2. Lấy các phiên bản đề cương cũ của cùng học phần + CTĐT + năm học + học kỳ
+        $sourceVersions = DB::table('outline_course_versions as ocv')
+            ->join('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+
+            // ✅ Cũng lấy năm học + học kỳ từ outline_program_courses
+            ->leftJoin('semesters as s', 'opc.semester_id', '=', 's.id')
+            ->leftJoin('academic_years as ay', 'opc.academic_year_id', '=', 'ay.id')
+
+            ->where('c.course_code', $assignment->course_code)   // cùng mã học phần
+            ->select(
+                'ocv.id as version_id',
+                'ocv.version_no',
+                'ocv.status',
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code',
+
+                // 👇 Thông tin năm học + học kỳ của từng version cũ
+                'ay.year_code as academic_year_code',
+                's.semester_name'
+            )
+            ->orderByDesc('ocv.created_at')
+            ->get();
+
+        return view('giangvien.outlines_clone_select', [
+            'assignment'     => $assignment,
+            'sourceVersions' => $sourceVersions,
+        ]);
+    }
+
+
+
+
+    public function clonePreview($sourceVersionId)
+    {
+        // Lấy meta version nguồn
+        $courseVersion = DB::table('outline_course_versions as ocv')
+            ->join('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+
+            // Lấy năm học + học kỳ từ outline_program_courses
+            ->leftJoin('semesters as s', 'opc.semester_id', '=', 's.id')
+            ->leftJoin('academic_years as ay', 'opc.academic_year_id', '=', 'ay.id')
+
+            ->where('ocv.id', $sourceVersionId)
+            ->select(
+                'ocv.id',
+                'ocv.version_no',
+                'ocv.status',
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code',
+
+                'ay.year_code as academic_year_code',
+                's.semester_name'
+            )
+            ->first();
+
+        if (!$courseVersion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy phiên bản đề cương nguồn.'
+            ], 404);
+        }
+
+        // Lấy danh sách mục nội dung
+        $sections = DB::table('outline_section_contents as c')
+            ->join('outline_section_templates as st', 'c.section_template_id', '=', 'st.id')
+            ->where('c.course_version_id', $sourceVersionId)
+            ->orderBy('st.order_no')
+            ->select(
+                'st.code',
+                'st.title',
+                'c.content_html'
+            )
+            ->get();
+
+        // Render partial thành HTML
+        $html = view('giangvien.partials.outline_preview', [
+            'courseVersion' => $courseVersion,
+            'sections'      => $sections,
+        ])->render();
+
+        return response()->json([
+            'success' => true,
+            'html'    => $html,
+        ]);
+    }
+
+
+
+
     public function index()
     {
         $user = Auth::user();
@@ -98,6 +244,210 @@ class GiangVienOutlineController extends Controller
         }
     }
 
+    public function clonePerform(Request $request, $assignmentId, $sourceVersionId)
+    {
+        $user      = Auth::user();
+        $lectureId = $user->lecture_id;
+        $userId    = $user->id;
+        $now       = now();
+
+        // 1. Lấy assignment đích (phân công hiện tại) + version đang soạn
+        $assignment = DB::table('outline_course_assignments as a')
+            ->join('outline_program_courses as opc', 'a.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+            ->where('a.id', $assignmentId)
+            ->where('a.lecture_id', $lectureId)
+            ->select(
+                'a.id',
+                'a.program_course_id',
+                'a.outline_course_version_id',
+                'a.role',
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code'
+            )
+            ->first();
+
+        if (!$assignment) {
+            return back()->with('error', 'Không tìm thấy phân công đề cương phù hợp.');
+        }
+
+        if (!$assignment->outline_course_version_id) {
+            return back()->with('error', 'Phân công này chưa có phiên bản đề cương. Vui lòng bấm "Tạo đề cương" trước khi nhân bản.');
+        }
+
+        $targetVersionId = $assignment->outline_course_version_id; // 🎯 bản đề cương đang soạn
+
+        // 2. Lấy version nguồn + kiểm tra cùng học phần (an toàn thêm)
+        $sourceVersion = DB::table('outline_course_versions as ocv')
+            ->join('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->where('ocv.id', $sourceVersionId)
+            ->select(
+                'ocv.id',
+                'ocv.program_course_id',
+                'ocv.version_no',
+                'c.course_code',
+                'c.course_name'
+            )
+            ->first();
+
+        if (!$sourceVersion) {
+            return back()->with('error', 'Không tìm thấy phiên bản đề cương nguồn.');
+        }
+
+        // (có thể nới lỏng nếu bạn muốn cho copy chéo học phần, nhưng mặc định nên cùng mã)
+        if ($sourceVersion->course_code !== $assignment->course_code) {
+            return back()->with('error', 'Phiên bản nguồn không cùng mã học phần với phân công hiện tại.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            /*
+         * 3. Xoá sạch nội dung hiện có của version đích
+         *    Vì tiện ích clone là "soạn nhanh" → ghi đè toàn bộ
+         */
+
+            // 3.1. Xoá section contents
+            DB::table('outline_section_contents')
+                ->where('course_version_id', $targetVersionId)
+                ->delete();
+
+            // 3.2. Xoá CLO + mapping (nếu có)
+            $oldTargetCloIds = DB::table('outline_clos')
+                ->where('course_version_id', $targetVersionId)
+                ->pluck('id')
+                ->all();
+
+            if (!empty($oldTargetCloIds)) {
+                DB::table('outline_clo_pi_maps')
+                    ->whereIn('clo_id', $oldTargetCloIds)
+                    ->delete();
+
+                DB::table('outline_clo_plo_maps')
+                    ->whereIn('clo_id', $oldTargetCloIds)
+                    ->delete();
+
+                DB::table('outline_clos')
+                    ->whereIn('id', $oldTargetCloIds)
+                    ->delete();
+            }
+
+            /*
+         * 4. Copy outline_section_contents từ sourceVersion sang targetVersion
+         */
+            $sourceSections = DB::table('outline_section_contents')
+                ->where('course_version_id', $sourceVersionId)
+                ->get();
+
+            foreach ($sourceSections as $sec) {
+                DB::table('outline_section_contents')->insert([
+                    'course_version_id'   => $targetVersionId,
+                    'section_template_id' => $sec->section_template_id,
+                    'content_html'        => $sec->content_html,
+                    'created_by'          => $userId, // hoặc $sec->created_by nếu muốn giữ nguyên
+                    'created_at'          => $now,
+                    'updated_at'          => $now,
+                ]);
+            }
+
+            /*
+         * 5. Copy CLO + mapping sang version đích (nếu có dùng CLO)
+         */
+
+            // 5.1. Clone outline_clos từ sourceVersion sang targetVersion
+            $sourceClos = DB::table('outline_clos')
+                ->where('course_version_id', $sourceVersionId)
+                ->get();
+
+            $cloIdMap = [];
+
+            foreach ($sourceClos as $clo) {
+                $newCloId = DB::table('outline_clos')->insertGetId([
+                    'course_version_id' => $targetVersionId,
+                    'code'              => $clo->code,
+                    'description'       => $clo->description,
+                    'bloom_level'       => $clo->bloom_level,
+                    'created_at'        => $now,
+                    'updated_at'        => $now,
+                ]);
+
+                $cloIdMap[$clo->id] = $newCloId;
+            }
+
+            if (!empty($cloIdMap)) {
+                $oldCloIds = array_keys($cloIdMap);
+
+                // 5.2. Clone CLO–PI
+                $sourceCloPiMaps = DB::table('outline_clo_pi_maps')
+                    ->whereIn('clo_id', $oldCloIds)
+                    ->get();
+
+                foreach ($sourceCloPiMaps as $m) {
+                    $newCloId = $cloIdMap[$m->clo_id] ?? null;
+                    if (!$newCloId) continue;
+
+                    DB::table('outline_clo_pi_maps')->insert([
+                        'clo_id'     => $newCloId,
+                        'pi_id'      => $m->pi_id,
+                        'level'      => $m->level,
+                        'weight'     => $m->weight,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]);
+                }
+
+                // 5.3. Clone CLO–PLO
+                $sourceCloPloMaps = DB::table('outline_clo_plo_maps')
+                    ->whereIn('clo_id', $oldCloIds)
+                    ->get();
+
+                foreach ($sourceCloPloMaps as $m) {
+                    $newCloId = $cloIdMap[$m->clo_id] ?? null;
+                    if (!$newCloId) continue;
+
+                    DB::table('outline_clo_plo_maps')->insert([
+                        'clo_id'     => $newCloId,
+                        'plo_id'     => $m->plo_id,
+                        'level'      => $m->level,
+                        'weight'     => $m->weight,
+                        'created_by' => $userId, // hoặc $m->created_by nếu muốn giữ nguyên
+                        'created_at' => $now,
+                    ]);
+                }
+            }
+
+            /*
+         * 6. Cập nhật meta version đích (status draft, updated_at)
+         */
+            DB::table('outline_course_versions')
+                ->where('id', $targetVersionId)
+                ->update([
+                    'status'     => 'draft',
+                    'updated_at' => $now,
+                ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('giangvien.outlines.edit', ['courseVersion' => $targetVersionId])
+                ->with('success', 'Đã nhân bản nội dung đề cương (và CLO, nếu có) vào phiên bản hiện tại.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Lỗi khi nhân bản đề cương: ' . $e->getMessage());
+        }
+    }
+
+
+
 
 
 
@@ -107,21 +457,53 @@ class GiangVienOutlineController extends Controller
     public function edit($courseVersionId)
     {
         // Thông tin phiên bản đề cương + học phần
+        // $courseVersion = DB::table('outline_course_versions as ocv')
+        //     ->leftJoin('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
+        //     ->leftJoin('courses', 'opc.course_id', '=', 'courses.id')
+        //     ->select(
+        //         'ocv.id',
+        //         'ocv.version_no',
+        //         'courses.course_code',
+        //         'courses.course_name'
+        //     )
+        //     ->where('ocv.id', $courseVersionId)
+        //     ->first();
+
         $courseVersion = DB::table('outline_course_versions as ocv')
-            ->leftJoin('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
-            ->leftJoin('courses', 'opc.course_id', '=', 'courses.id')
+            ->join('outline_program_courses as opc', 'ocv.program_course_id', '=', 'opc.id')
+            ->join('courses as c', 'opc.course_id', '=', 'c.id')
+            ->join('outline_program_versions as opv', 'opc.program_version_id', '=', 'opv.id')
+            ->join('education_programs as ep', 'opv.education_program_id', '=', 'ep.id')
+            // lấy năm học + học kỳ từ outline_program_courses
+            ->leftJoin('semesters as s', 'opc.semester_id', '=', 's.id')
+            ->leftJoin('academic_years as ay', 'opc.academic_year_id', '=', 'ay.id')
             ->select(
                 'ocv.id',
                 'ocv.version_no',
-                'courses.course_code',
-                'courses.course_name'
+
+                'c.course_code',
+                'c.course_name',
+
+                'ep.program_code',
+                'ep.program_name',
+                'opv.version_code as program_version_code',
+
+                'ay.year_code as academic_year_code',
+                's.semester_name'
             )
             ->where('ocv.id', $courseVersionId)
             ->first();
 
+
         if (!$courseVersion) {
             abort(404, 'Không tìm thấy phiên bản đề cương.');
         }
+
+        // Lấy assignment của GV hiện tại ứng với version này (nếu có)
+        $assignment = DB::table('outline_course_assignments')
+            ->where('outline_course_version_id', $courseVersionId)
+            ->where('lecture_id', Auth::user()->lecture_id)
+            ->first();
 
         // Khoa của giảng viên hiện tại
         $facultyId = DB::table('lectures as l')
@@ -193,6 +575,7 @@ class GiangVienOutlineController extends Controller
             'currentTemplateId' => $currentTemplateId,
             'templateMeta'      => $templateMeta,
             'sections'          => $sections,
+            'assignment'        => $assignment,
             // nếu bạn có layout riêng cho giảng viên thì sửa lại ở đây
             'layout'            => 'layouts.appGV',
         ]);

@@ -237,6 +237,35 @@
                 </select>
             </div>
         </div>
+
+        {{-- Hàng info CTĐT + khóa + năm học/học kỳ --}}
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <label>Chương trình đào tạo</label>
+                <div>
+                    {{ $courseVersion->program_code ?? '---' }}
+                    @if (!empty($courseVersion->program_name))
+                        – {{ $courseVersion->program_name }}
+                    @endif
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Khóa / Phiên bản CTĐT</label>
+                <div>
+                    {{ $courseVersion->program_version_code ?? '---' }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Năm học / Học kỳ</label>
+                <div>
+                    {{ $courseVersion->academic_year_code ?? '---' }}
+                    @if (!empty($courseVersion->semester_name))
+                        – {{ $courseVersion->semester_name }}
+                    @endif
+                </div>
+            </div>
+        </div>
+
         <small class="text-muted">
             * Giảng viên hãy chọn mẫu đề cương, sau đó điền nội dung cho từng mục. Cấu trúc đề cương do Trưởng khoa định
             nghĩa.
@@ -314,12 +343,11 @@
             </a> --}}
 
             <!-- Tiện ích 4 -->
-            {{-- <a class="fab-item" href="{{ route('giangvien.outlines.clone.select', ['assignment' => $assignment->id]) }}"> --}}
-            <a class="fab-item" href="#">
-
+            <a class="fab-item" href="javascript:void(0)" id="fabClone">
                 <i class="bi bi-files text-warning"></i>
                 Nhân bản nhanh
             </a>
+
 
         </div>
     </div>
@@ -605,6 +633,23 @@
 
             window.location.href =
                 "{{ route('giangvien.outlines.clo.index', ['courseVersion' => $courseVersion->id]) }}";
+        });
+
+        // Nút mở tiện ích Nhân bản nhanh
+        document.getElementById("fabClone")?.addEventListener("click", function() {
+            // Nếu sau này bạn có set hasUnsavedChanges = true khi CKEditor thay đổi
+            if (typeof hasUnsavedChanges !== 'undefined' && hasUnsavedChanges) {
+                if (!confirm("Bạn có thay đổi chưa lưu. Vẫn chuyển sang màn hình nhân bản?")) {
+                    return;
+                }
+            }
+
+            @if ($assignment)
+                window.location.href =
+                    "{{ route('giangvien.outlines.clone.select', ['assignment' => $assignment->id]) }}";
+            @else
+                alert("Không tìm thấy phân công đề cương tương ứng để nhân bản.");
+            @endif
         });
     </script>
 
