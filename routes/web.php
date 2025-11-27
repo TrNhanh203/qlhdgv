@@ -68,6 +68,7 @@ use App\Http\Controllers\TruongBoMon\TruongBoMonOutlineAssignmentController;
 use App\Http\Controllers\GiangVien\DashboardController as GiangVienDashboardController;
 use App\Http\Controllers\GiangVien\GiangVienOutlineController;
 use App\Http\Controllers\GiangVien\GiangVienCloController;
+use App\Http\Controllers\GiangVien\GiangVienCloMappingController;
 
 
 /*
@@ -499,6 +500,32 @@ Route::prefix('giangvien')
                     [GiangVienOutlineController::class, 'clonePerform']
                 )->name('clone.perform');
                 // ======================================================
+
+
+                // ============= TIỆN ÍCH MAPPING CLO – PI =============
+                Route::get(
+                    '/version/{courseVersion}/clo-mapping',
+                    [GiangVienCloMappingController::class, 'index']
+                )->name('cloMapping.index');
+
+                Route::post(
+                    '/version/{courseVersion}/clo-mapping',
+                    [GiangVienCloMappingController::class, 'save']
+                )->name('cloMapping.save');
+
+                // Preview bảng mapping + chọn section để chèn
+                Route::get(
+                    '/version/{courseVersion}/clo-mapping/preview',
+                    [GiangVienCloMappingController::class, 'preview']
+                )->name('cloMapping.preview');
+
+                // Thực hiện chèn HTML mapping vào 1 section cụ thể
+                Route::post(
+                    '/version/{courseVersion}/clo-mapping/render',
+                    [GiangVienCloMappingController::class, 'renderToSection']
+                )->name('cloMapping.render');
+                // ======================================================
+
 
 
                 //  trang tiện ích CLO cho 1 phiên bản đề cương

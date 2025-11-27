@@ -206,6 +206,20 @@
     </style>
 
 
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
+        </div>
+    @endif
+
     {{-- Panel chọn mẫu + thông tin học phần --}}
     <div class="panel">
         <h5>Soạn đề cương chi tiết</h5>
@@ -333,9 +347,10 @@
 
 
             <!-- Tiện ích 2 -->
-            <a class="fab-item" href="#">
-                <i class="bi bi-diagram-3 text-success"></i> Mapping CLO – PLO
+            <a class="fab-item" href="javascript:void(0)" id="fabCloMapping">
+                <i class="bi bi-diagram-3 text-success"></i> Mapping CLO – PLO/PI
             </a>
+
 
             <!-- Tiện ích 3 -->
             {{-- <a class="fab-item" href="#">
@@ -354,6 +369,8 @@
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <script>
         let hasUnsavedChanges = false;
@@ -635,6 +652,15 @@
                 "{{ route('giangvien.outlines.clo.index', ['courseVersion' => $courseVersion->id]) }}";
         });
 
+        // Nút mở tiện ích CLO Mapping
+        document.getElementById("fabCloMapping")?.addEventListener("click", function() {
+            if (!canUseUtilities()) return;
+
+            window.location.href =
+                "{{ route('giangvien.outlines.cloMapping.index', ['courseVersion' => $courseVersion->id]) }}";
+        });
+
+
         // Nút mở tiện ích Nhân bản nhanh
         document.getElementById("fabClone")?.addEventListener("click", function() {
             // Nếu sau này bạn có set hasUnsavedChanges = true khi CKEditor thay đổi
@@ -671,6 +697,44 @@
                     fabMain.classList.remove('open');
                     fabMenu.classList.remove('show');
                 }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Không thể thực hiện mapping',
+                    text: @json(session('error')),
+                    confirmButtonText: 'Đã hiểu'
+                });
+            @endif
+
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: @json(session('success')),
+                    confirmButtonText: 'OK'
+                });
+            @endif
+        });
+    </script>
+
+    // Tự động ẩn thông báo sau 4 giây
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    // Remove hẳn khỏi DOM sau khi ẩn
+                    setTimeout(() => alert.remove(), 300);
+                }, 4000); // 4000 ms = 4 giây
             });
         });
     </script>
